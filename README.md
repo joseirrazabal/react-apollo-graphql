@@ -1,6 +1,14 @@
+<<<<<<< HEAD
 # graphql-tutorial / Hermes
 Full-stack GraphQL tutorials with React, Redux and Apollo
 
+=======
+# graphql-tutorial
+Full-stack GraphQL tutorials with React, Redux and Apollo
+
+[Part 1: the frontend](https://dev-blog.apollodata.com/full-stack-react-graphql-tutorial-582ac8d24e3b)
+
+>>>>>>> adf82702d30999c2284c3516c8d3ea0f2cfd5c37
 1. Build a simple React app with GraphQL and Apollo
 2. Build a simple GraphQL server in 15 mins
 3. Adding mutations to your React/GraphQL app
