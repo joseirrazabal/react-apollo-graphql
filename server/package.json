@@ -25,6 +25,7 @@
     "graphql-server-module-graphiql": "^0.8.2",
     "graphql-subscriptions": "^0.4.3",
     "graphql-tools": "^1.0.0",
+    "kafka-node": "^2.2.3",
     "mongoose": "^4.11.4",
     "subscriptions-transport-ws": "^0.7.3"
   }
