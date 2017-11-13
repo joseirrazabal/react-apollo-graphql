@@ -1,7 +1,7 @@
 import { PubSub } from 'graphql-subscriptions';
 import { withFilter } from 'graphql-subscriptions';
 
-import Channel from './connectors'
+import { Channel, User, signIn } from './connectors'
 
 const pubsub = new PubSub();
 
@@ -12,7 +12,10 @@ export const resolvers = {
     },
     channel: (root, { name }) => {
       return Channel.findOne({ name }).then((response) => response);
-    },
+	},
+    // user: (root, { email }) => {
+    //   return User.findOne({ email }).then((response) => response);
+    // },
   },
   Mutation: {
     addChannel: (root, args) => {
@@ -37,7 +40,28 @@ export const resolvers = {
       // pubsub.publish('messageAdded', { messageAdded: newMessage, channelId: message.channelId });
 
       // return newMessage;
-    },
+	},
+	signIn(root, args) {
+		const errors = [];
+  
+		return signIn(args)
+		  .then(token => ({
+			token,
+			errors
+		  }))
+		  .catch((err) => {
+			if (err.code && err.message) {
+			  errors.push({
+				key: err.code,
+				value: err.message
+			  });
+  
+			  return { token: null, errors };
+			}
+  
+			throw new Error(err);
+		  });
+	  }
   },
   Subscription: {
     channelAdded: {

@@ -28,10 +28,23 @@ type Query {
   channel(name: String!): Channel
 }
 
+# Error type.
+type Error {
+  key: String
+  value: String
+}
+
+# Auth type.
+type Auth {
+  token: String
+  errors: [Error]
+}
+
 # The mutation root type, used to define all mutations
 type Mutation {
   addChannel(name: String!): Channel
   addMessage(message: MessageInput!): Message
+  signIn(email: String!, password: String!): Auth
 }
 
 # The subscription root type, specifying what we can subscribe to
