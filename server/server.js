@@ -11,6 +11,8 @@ import { createServer } from 'http';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import mongoose from 'mongoose'
 
+import { database } from './src/config'
+
 // import avro from 'avsc';
 // import kafka from 'kafka-node';
 // var Kafka = require('node-rdkafka');
@@ -189,13 +191,17 @@ process.on('SIGINT', function () {
 */
 
 
-mongoose.connect('mongodb://localhost:27017/graph', { useMongoClient: true })
+// mongoose.connect('mongodb://localhost:27017/graph', { useMongoClient: true })
+mongoose.connect(`mongodb://${database.host}:${database.port}/${database.name}`);
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'Connection error:'));
+db.once('open', () => console.log('We are connected!'));
 
 const PORT = 4000;
 const server = express();
 
 // Puerto original 3000
-server.use('*', cors({ origin: 'http://localhost:3000' }));
+server.use('*', cors({ origin: 'http://localhost:1337' }));
 
 server.use('/graphql', bodyParser.json(), graphqlExpress({
 	schema

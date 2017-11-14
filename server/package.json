@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "avsc": "^5.0.7",
+    "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.17.1",
     "cors": "^2.8.3",
     "express": "^4.15.2",
@@ -28,9 +29,11 @@
     "graphql-server-module-graphiql": "^0.8.2",
     "graphql-subscriptions": "^0.4.3",
     "graphql-tools": "^1.0.0",
+    "jsonwebtoken": "^8.1.0",
     "kafka-node": "^2.2.3",
     "mongoose": "^4.11.4",
     "node-rdkafka": "^2.1.1",
-    "subscriptions-transport-ws": "^0.7.3"
+    "subscriptions-transport-ws": "^0.7.3",
+    "validator": "^9.1.1"
   }
 }

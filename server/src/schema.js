@@ -33,10 +33,18 @@ type Error {
   key: String
   value: String
 }
-
+# user
+type User {
+  id: String
+  username: String
+  createdAt: String
+  modifiedAt: String
+  lastLogin: String
+}
 # Auth type.
 type Auth {
   token: String
+  user: User
   errors: [Error]
 }
 
@@ -44,7 +52,7 @@ type Auth {
 type Mutation {
   addChannel(name: String!): Channel
   addMessage(message: MessageInput!): Message
-  signIn(email: String!, password: String!): Auth
+  logUser(email: String!, password: String!): Auth
 }
 
 # The subscription root type, specifying what we can subscribe to
