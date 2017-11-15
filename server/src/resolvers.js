@@ -1,10 +1,9 @@
-import { PubSub } from 'graphql-subscriptions';
 import { withFilter } from 'graphql-subscriptions';
 
-// import { Channel, User, signIn } from './connectors'
 import connector from './connectors'
+import Channel from './models/Channel'
 
-const pubsub = new PubSub();
+import pubsub from '../pubsub'
 
 export const resolvers = {
 	Query: {
@@ -24,7 +23,10 @@ export const resolvers = {
 			// channels.push(newChannel);
 			const newChannel = new Channel(args);
 
-			pubsub.publish('channelAdded', { channelAdded: newChannel });
+			// pubsub.publish('channelAdded', { channelAdded: { id: newChannel._id, name: newChannel.name } } );
+
+			// kafka
+			pubsub.publish({ 'channel': 'channelAdded', channelAdded: { id: newChannel._id, name: newChannel.name } } );
 
 			return newChannel.save().then((response) => response);
 			// channels.push(newChannel);
@@ -82,7 +84,6 @@ export const resolvers = {
 			// subscribe: withFilter(() => pubsub.asyncIterator('channelAdded'), (payload, variables) => {
 			// return payload.name === variables.name;
 			// return payload;
-			// }),
 		},
 		messageAdded: {
 			subscribe: withFilter(() => pubsub.asyncIterator('messageAdded'), (payload, variables) => {

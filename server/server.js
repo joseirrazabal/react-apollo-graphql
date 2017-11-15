@@ -10,220 +10,97 @@ import { execute, subscribe } from 'graphql';
 import { createServer } from 'http';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import mongoose from 'mongoose'
+import { SubscriptionManager } from 'graphql-subscriptions';
+import pubsub from './pubsub'
 
-import { database } from './src/config'
+import { server as serverConfig, database } from './src/config'
+mongoose.connect(`mongodb://${database.host}:${database.port}/${database.name}`, { useMongoClient: true });
 
-// import avro from 'avsc';
-// import kafka from 'kafka-node';
-// var Kafka = require('node-rdkafka');
-// console.log(kafka.features);
-// console.log(kafka.librdkafkaVersion);
-
-// var initializeProducer = function () {
-// 	producer = new kafka.Producer({
-// 		'client.id': 'kafka',
-// 		'metadata.broker.list': 'localhost:9092',
-// 		'compression.codec': 'gzip',
-// 		'retry.backoff.ms': 200,
-// 		'message.send.max.retries': 10,
-// 		'socket.keepalive.enable': true,
-// 		'queue.buffering.max.messages': 100000,
-// 		'queue.buffering.max.ms': 1000,
-// 		'batch.num.messages': 1000000,
-// 		'dr_cb': true
-// 	});
-
-// 	producer.connect({}, function (err) {
-// 		if (err) {
-// 			console.log(err);
-// 			return process.exit(1);
-// 		};
-// 	});
-
-// 	bindListeners();
-// };
-
-
-/*
-var stream = Kafka.Producer.createWriteStream({
-	'metadata.broker.list': 'localhost:9092'
-}, {}, {
-		topic: 'topic-name'
-	});
-
-// Writes a message to the stream
-var queuedSuccess = stream.write(new Buffer('Awesome 123'));
-
-if (queuedSuccess) {
-	console.log('We queued our message!');
-} else {
-	// Note that this only tells us if the stream's queue is full,
-	// it does NOT tell us if the message got to Kafka!  See below...
-	console.log('Too many messages in our queue already');
-}
-
-stream.on('error', function (err) {
-	// Here's where we'll know if something went wrong sending to Kafka
-	console.error('Error in our kafka stream');
-	console.error(err);
-})
-*/
-
-/*
-var avroSchema = {
-	name: 'MyAwesomeType',
-	type: 'record',
-	fields: [
-		{
-			name: 'id',
-			type: 'string'
-		}, {
-			name: 'timestamp',
-			type: 'double'
-		}, {
-			name: 'enumField',
-			type: {
-				name: 'EnumField',
-				type: 'enum',
-				symbols: ['sym1', 'sym2', 'sym3']
-			}
-		}]
-};
-
-var type = avro.parse(avroSchema);
-var HighLevelProducer = kafka.HighLevelProducer;
-var KeyedMessage = kafka.KeyedMessage;
-var Client = kafka.Client;
-
-var client = new Client('localhost:2181', 'my-client-id', {
-	sessionTimeout: 300,
-	spinDelay: 100,
-	retries: 2
-});
-
-// For this demo we just log client errors to the console.
-client.on('error', function (error) {
-	console.error(error);
-});
-*/
-
-
-/*
- -----------------------------  producer.js  -----------------------------
-
- --> Este es el productor que así como está, se puede
- correr desde node -> node producer.js
-
- var producer = new HighLevelProducer(client);
-
- producer.on('ready', function() {
- // Create message and encode to Avro buffer
- var messageBuffer = type.toBuffer({
- enumField: 'sym1',
- id: '3e0c63c4-956a-4378-8a6d-2de636d191de',
- timestamp: Date.now()
- });
-
- // Create a new payload
- var payload = [{
- topic: 'node-test',
- messages: messageBuffer,
- attributes: 1 /!* Use GZip compression for the payload *!/
- }];
-
- //Send payload to Kafka and log result/error
- producer.send(payload, function(error, result) {
- console.info('Sent payload to Kafka: ', payload);
- if (error) {
- console.error(error);
- } else {
- var formattedResult = result[0]
- console.log('result: ', result)
- }
- });
- });
-
- producer.on('error', function(error) {
- console.error(error);
- });
-
- -------------------------------------------------------------------------
- */
-
-/*
-var HighLevelConsumer = kafka.HighLevelConsumer;
-var Client = kafka.Client;
-
-var client = new Client('localhost:2181');
-var topics = [{
-	topic: 'node-test'
-}];
-
-var options = {
-	groupId: 'aaa',
-	autoCommit: true,
-	fetchMaxWaitMs: 1000,
-	fetchMaxBytes: 1024 * 1024,
-	encoding: 'buffer'
-};
-var consumer = new HighLevelConsumer(client, topics, options);
-
-consumer.on('message', function (message) {
-	if (message.value) {
-		var buf = new Buffer(message.value, 'binary'); // Read string into a buffer.
-		if (buf) {
-			console.log(buf.toString())
-		}
-		// var decodedMessage = type.fromBuffer(buf.slice(0)); // Skip prefix.
-		// console.log(decodedMessage);
-	}
-});
-
-consumer.on('error', function (err) {
-	console.log('error', err);
-});
-
-process.on('SIGINT', function () {
-	consumer.close(true, function () {
-		process.exit();
-	});
-});
-*/
-
-
-// mongoose.connect('mongodb://localhost:27017/graph', { useMongoClient: true })
-mongoose.connect(`mongodb://${database.host}:${database.port}/${database.name}`);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Connection error:'));
 db.once('open', () => console.log('We are connected!'));
 
-const PORT = 4000;
-const server = express();
+// creamos una función asíncrona autoejecutable para poder usar Async/Await
+(async () => {
+	// try {
+	// intentamos sincronizar nuestro modelo con la BD
+	// si estamos en desarollo forzamos el sincronizado
+	// borrando los datos viejos
+	// await Todo.sync({ force: NODE_ENV !== 'production' });
+	// } catch (error) {
+	// si ocurre un error mostramos el error y matamos el proceso
+	// 	console.log(error);
+	// 	process.exit(0);
+	// }
 
-// Puerto original 3000
-server.use('*', cors({ origin: 'http://localhost:1337' }));
+	// creamos una aplicación de express y un servidor HTTP apartir de esta
+	const app = express();
+	const server = createServer(app);
 
-server.use('/graphql', bodyParser.json(), graphqlExpress({
-	schema
-}));
+	// usamos 3 los middlewares que importamos
+	app.use(cors());
+	// app.use(compression());
+	// app.use(morgan('common'));
 
-server.use('/graphiql', graphiqlExpress({
-	endpointURL: '/graphql',
-	subscriptionsEndpoint: `ws://localhost:4000/subscriptions`
-}));
+	// creamos nuestro administrador de suscripciones usando nuestro esquema ejecutable
+	// y nuestro módulo de PubSub y definimos como manejar cada suscripción
+	const subscriptionManager = new SubscriptionManager({
+		schema,
+		pubsub,
+		setupFunctions: {
+			// cuando alguien se suscribe a `todoUpdated` solo mandamos las del ID al que se suscribe
+			todoUpdated(options, args) {
+				return {
+					todoUpdated: {
+						filter: todo => todo.id === args.id,
+					},
+				};
+			},
+			// cuando alguien se suscribe a `todoCreated` solo enviamos las del status
+			// al que el cliente se suscribe
+			todoCreated(options, args) {
+				return {
+					todoCreated: {
+						filter: todo => todo.status === args.status,
+					},
+				};
+			},
+		},
+	});
 
-// We wrap the express server so that we can attach the WebSocket for subscriptions
-const ws = createServer(server);
-ws.listen(PORT, () => {
-	console.log(`GraphQL Server is now running on http://localhost:${PORT}`);
+	// definimos la URL `/graphql` que usa los middlewares `body-parser` y el `graphqlExpress`
+	// usando el esquema ejecutable que creamos
+	app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
 
-	// Set up the WebSocket for handling GraphQL subscriptions
-	new SubscriptionServer({
-		execute,
-		subscribe,
-		schema
-	}, {
-			server: ws,
-			path: '/subscriptions',
-		});
-});
+	// si no estamos en producción
+	// if (NODE_ENV !== 'production') {
+		// usamos el middleware `graphiqlExpress` para crear la URL `/ide` donde cargamos GraphiQL
+		// este IDE va a consumir datos de la URL `/graphql` que creamos antes y `/subscriptions`
+		app.use('/ide', graphiqlExpress({
+			endpointURL: '/graphql',
+			subscriptionsEndpoint: `ws://${serverConfig.host}:${serverConfig.port}/subscriptions`,
+		}));
+	// }
+
+	// iniciamos el servidor en el puerto y host que obtuvimos por variables de entorno
+	server.listen(serverConfig.port, serverConfig.host, error => {
+		// creamos el servidor de suscripciones usando el administrador de suscripciones
+		// combinando el servidor HTTTP y definiendo la ruta `/subscriptions`
+		new SubscriptionServer({ subscriptionManager }, { server, path: '/subscriptions' });
+		// luego mostramos un simple log indicando la URL donde corre el servidor
+		console.log('> Server running on http://%s:%d', serverConfig.host, serverConfig.port)
+	});
+
+	// server.listen(serverConfig.port, () => {
+	// 	console.log(`GraphQL Server is now running on http://localhost:${serverConfig.port}`);
+	// 	new SubscriptionServer({
+	// 		execute,
+	// 		subscribe,
+	// 		schema
+	// 	}, {
+	// 			server: server,
+	// 			path: '/subscriptions',
+	// 		});
+	// });
+
+})();
