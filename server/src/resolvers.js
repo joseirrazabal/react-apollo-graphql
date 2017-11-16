@@ -5,10 +5,40 @@ import Channel from './models/Channel'
 
 import pubsub from '../pubsub'
 
+var PROTO_PATH = './helloworld.proto';
+
+var grpc = require('grpc');
+var hello_proto = grpc.load(PROTO_PATH).helloworld;
+
+var client = new hello_proto.Greeter('localhost:50051', grpc.credentials.createInsecure());
+
+client.sayHello({name: "user"}, function(err, response) {
+	console.log('sayHello:', response.message);
+});
+
+function sayHello(call, callback) {
+	callback(null, { message: 'null' });
+}
+
+var server = new grpc.Server();
+server.addService(hello_proto.Greeter.service, {sayHello: sayHello});
+server.bind('0.0.0.0:50051', grpc.ServerCredentials.createInsecure());
+server.start();
+
 export const resolvers = {
 	Query: {
 		channels: () => {
-			return Channel.find({}).then((response) => response);
+			return new Promise((resolve, reject) => {
+				client.sayHello({name: "user"}, function(err, response) {
+					if (response && response.message) {
+						resolve(JSON.parse(response.message))
+					} else {
+						resolve([])
+					}
+				});
+			})
+
+			// return Channel.find({}).then((response) => { return response });
 		},
 		channel: (root, { name }) => {
 			return Channel.findOne({ name }).then((response) => response);

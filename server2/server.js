@@ -54,8 +54,28 @@ client.on('error', function (error) {
 
 var producer = new HighLevelProducer(client);
 
+var PROTO_PATH = './helloworld.proto';
+
+var grpc = require('grpc');
+var hello_proto = grpc.load(PROTO_PATH).helloworld;
+
+var result = []
+result.push({ _id: "5a0cae787f21fa41607cdd19", id: "5a0cae787f21fa41607cdd19", name: 'micro02'})
+result = JSON.stringify(result)
+
+function sayHello(call, callback) {
+	// callback(null, {message: 'Prueba' + call.request.name});
+	callback(null, {message: result });
+}
+
+var server = new grpc.Server();
+server.addService(hello_proto.Greeter.service, {sayHello: sayHello});
+server.bind('0.0.0.0:50051', grpc.ServerCredentials.createInsecure());
+server.start();
+
+
 producer.on('ready', function () {
-	for (let x = 0; x < 10; x++) {
+	for (let x = 0; x < 2; x++) {
 		// Create message and encode to Avro buffer
 		let id = "5a0cae787f21fa31607cd123d19" + x
 		var messageBuffer = {
