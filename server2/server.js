@@ -41,7 +41,7 @@ var HighLevelProducer = kafka.HighLevelProducer;
 var KeyedMessage = kafka.KeyedMessage;
 var Client = kafka.Client;
 
-var client = new Client('localhost:2181', 'my-client-id', {
+var client = new Client('35.202.3.215:2181', 'my-client-id', {
 	sessionTimeout: 300,
 	spinDelay: 100,
 	retries: 2
@@ -56,7 +56,7 @@ var producer = new HighLevelProducer(client);
 
 
 
-var grpc = require('grpc');
+import grpc from 'grpc'
 
 var PROTO_PATH = './helloworld.proto';
 var proto = grpc.load(PROTO_PATH)
@@ -77,11 +77,11 @@ server.bind('0.0.0.0:50051', grpc.ServerCredentials.createInsecure());
 server.start();
 
 
-// producer.on('ready', function () {
-// 	for (let x = 0; x < 2; x++) {
-// 		sendKafka(x)
-// 	}
-// });
+producer.on('ready', function () {
+	for (let x = 0; x < 2; x++) {
+		sendKafka(x)
+	}
+});
 
 function sendKafka(x) {
 	let id = "5a0cae787f21fa31607cd123d19" + x
@@ -96,7 +96,7 @@ function sendKafka(x) {
 
 	// Create a new payload
 	var payload = [{
-		topic: 'node-test',
+		topic: 'topic-test',
 		messages: JSON.stringify(messageBuffer),
 		attributes: 1 // !* Use GZip compression for the payload *!/
 	}];

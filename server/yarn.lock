@@ -1581,6 +1581,10 @@ graphql@^0.10.1:
   dependencies:
     iterall "^1.1.0"
 
+grpc-promise@^1.1.0:
+  version "1.1.0"
+  resolved "http://10.0.41.30:8080/grpc-promise/-/grpc-promise-1.1.0.tgz#15b0dcbea7b2a9248beda7c8a4425dfb8fb4a715"
+
 grpc@^1.7.1:
   version "1.7.1"
   resolved "http://10.0.41.30:8080/grpc/-/grpc-1.7.1.tgz#a1eecd074e78ffe5bb3bb64dcc7417d14fdb5cc4"

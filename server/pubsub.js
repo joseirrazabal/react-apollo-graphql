@@ -7,8 +7,8 @@
 import { KafkaPubSub } from 'graphql-kafka-subscriptions'
 
 var pubsub = new KafkaPubSub({
-  topic: 'node-test',
-  host: 'localhost',
+  topic: 'topic-test',
+  host: '35.202.3.215',
   port: '9092',
 })
 

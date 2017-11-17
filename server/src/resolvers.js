@@ -5,31 +5,30 @@ import Channel from './models/Channel'
 
 import pubsub from '../pubsub'
 
+import grpc from 'grpc'
+
 var PROTO_PATH = './helloworld.proto';
-
-var grpc = require('grpc');
-
 var proto = grpc.load(PROTO_PATH);
 
 var client = new proto.helloworld.Greeter('localhost:50051', grpc.credentials.createInsecure());
 
-client.sayHello({name: "user"}, function(err, response) {
-	console.log('sayHello:', response.message);
-});
+import grpcPromise from 'grpc-promise';
+grpcPromise.promisifyAll(client);
 
 export const resolvers = {
 	Query: {
 		channels: () => {
-			return new Promise((resolve, reject) => {
-				client.sayHello({name: "user"}, function(err, response) {
-					if (response && response.message) {
-						resolve(JSON.parse(response.message))
-					} else {
-						resolve([])
-					}
-				});
-			})
+			// return new Promise((resolve, reject) => {
+			// 	client.sayHello({ name: "user" }, function (err, response) {
+			// 		resolve(JSON.parse(response && response.message) || [])
+			// 	});
+			// })
 
+			return client.sayHello().sendMessage({ name: "user" }).then( response => {
+				return JSON.parse(response && response.message) || []
+			})
+			.catch( err => { return []})
+			
 			// return Channel.find({}).then((response) => { return response });
 		},
 		channel: (root, { name }) => {
@@ -48,7 +47,7 @@ export const resolvers = {
 			// pubsub.publish('channelAdded', { channelAdded: { id: newChannel._id, name: newChannel.name } } );
 
 			// kafka
-			pubsub.publish({ 'channel': 'channelAdded', channelAdded: { id: newChannel._id, name: newChannel.name } } );
+			pubsub.publish({ 'channel': 'channelAdded', channelAdded: { id: newChannel._id, name: newChannel.name } });
 
 			return newChannel.save().then((response) => response);
 			// channels.push(newChannel);
@@ -76,9 +75,9 @@ export const resolvers = {
 					user.username = "usuario2"
 					user.id = "1"
 					user.username = "user"
-					user.createdAt = Date() 
+					user.createdAt = Date()
 					user.modifiedAt = Date()
-					user.lastLogin = Date() 
+					user.lastLogin = Date()
 
 					return ({
 						token,
