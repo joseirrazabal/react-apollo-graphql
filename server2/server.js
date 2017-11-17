@@ -54,10 +54,12 @@ client.on('error', function (error) {
 
 var producer = new HighLevelProducer(client);
 
-var PROTO_PATH = './helloworld.proto';
+
 
 var grpc = require('grpc');
-var hello_proto = grpc.load(PROTO_PATH).helloworld;
+
+var PROTO_PATH = './helloworld.proto';
+var proto = grpc.load(PROTO_PATH)
 
 var result = []
 result.push({ _id: "5a0cae787f21fa41607cdd19", id: "5a0cae787f21fa41607cdd19", name: 'micro02'})
@@ -69,7 +71,7 @@ function sayHello(call, callback) {
 }
 
 var server = new grpc.Server();
-server.addService(hello_proto.Greeter.service, {sayHello: sayHello});
+server.addService(proto.helloworld.Greeter.service, {sayHello: sayHello});
 server.bind('0.0.0.0:50051', grpc.ServerCredentials.createInsecure());
 server.start();
 
