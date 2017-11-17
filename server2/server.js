@@ -61,52 +61,50 @@ var grpc = require('grpc');
 var PROTO_PATH = './helloworld.proto';
 var proto = grpc.load(PROTO_PATH)
 
-var result = []
-result.push({ _id: "5a0cae787f21fa41607cdd19", id: "5a0cae787f21fa41607cdd19", name: 'micro02'})
-result = JSON.stringify(result)
-
 function sayHello(call, callback) {
-	// callback(null, {message: 'Prueba' + call.request.name});
-	callback(null, {message: result });
+	var result = []
+	result.push({ _id: "5a0cae787f21fa41607cdd19", id: "5a0cae787f21fa41607cdd19", name: 'micro01', description: 'description' })
+
+	callback(null, { message: JSON.stringify(result) });
+
+	// kafka
+	sendKafka(3)
 }
 
 var server = new grpc.Server();
-server.addService(proto.helloworld.Greeter.service, {sayHello: sayHello});
+server.addService(proto.helloworld.Greeter.service, { sayHello: sayHello });
 server.bind('0.0.0.0:50051', grpc.ServerCredentials.createInsecure());
 server.start();
 
 
-producer.on('ready', function () {
-	for (let x = 0; x < 2; x++) {
-		// Create message and encode to Avro buffer
-		let id = "5a0cae787f21fa31607cd123d19" + x
-		var messageBuffer = {
-			"channel": "channelAdded",
-			"channelAdded": {
-				id: id,
-				name: "prueba" + x
-			}
-		};
+// producer.on('ready', function () {
+// 	for (let x = 0; x < 2; x++) {
+// 		sendKafka(x)
+// 	}
+// });
 
-		// Create a new payload
-		var payload = [{
-			topic: 'node-test',
-			messages: JSON.stringify(messageBuffer),
-			attributes: 1 // !* Use GZip compression for the payload *!/
-		}];
+function sendKafka(x) {
+	let id = "5a0cae787f21fa31607cd123d19" + x
+	var messageBuffer = {
+		"channel": "channelAdded",
+		"channelAdded": {
+			id: id,
+			name: "prueba" + x,
+			description: 'description'
+		}
+	};
 
-		//Send payload to Kafka and log result/error
-		producer.send(payload, function (error, result) {
-			console.info('Sent payload to Kafka: ', payload);
-			if (error) {
-				console.error(error);
-			} else {
-				var formattedResult = result[0]
-			}
-		});
+	// Create a new payload
+	var payload = [{
+		topic: 'node-test',
+		messages: JSON.stringify(messageBuffer),
+		attributes: 1 // !* Use GZip compression for the payload *!/
+	}];
 
-	}
-});
+	producer.send(payload, function (error, result) {
+		if (error) console.error(error);
+	});
+}
 
 producer.on('error', function (error) {
 	console.error(error);

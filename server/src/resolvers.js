@@ -9,7 +9,6 @@ var PROTO_PATH = './helloworld.proto';
 
 var grpc = require('grpc');
 
-// var hello_proto = grpc.load(PROTO_PATH).helloworld;
 var proto = grpc.load(PROTO_PATH);
 
 var client = new proto.helloworld.Greeter('localhost:50051', grpc.credentials.createInsecure());
