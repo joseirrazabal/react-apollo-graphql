@@ -10,7 +10,7 @@ exports.getTokenFromRequest = req => (
 
 exports.createToken = payload => (
   jwt.sign(payload, process.env.AUTH_SECRET, {
-    expiresIn: process.env.AUTH_EXPIRES_IN
+    expiresIn: process.env.AUTH_EXPIRESIN
   })
 );
 
