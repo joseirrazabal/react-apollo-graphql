@@ -2,6 +2,7 @@ import { withFilter } from 'graphql-subscriptions';
 
 import connector from './connectors'
 import Channel from './models/Channel'
+import User from './models/User'
 
 import pubsub from '../pubsub'
 
@@ -37,9 +38,12 @@ export const resolvers = {
 		channel: (root, { name }) => {
 			return Channel.findOne({ name }).then((response) => response);
 		},
-		// user: (root, { email }) => {
-		//   return User.findOne({ email }).then((response) => response);
-		// },
+		getUser: (root, { id }) => {
+			return User.findOne({ id }).then((response) => response);
+		},
+		getRole: (root, { id }) => {
+			return User.findOne({ id }).then((response) => response);
+		},
 	},
 	Mutation: {
 		addChannel: (root, args) => {
