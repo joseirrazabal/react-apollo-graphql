@@ -10,7 +10,10 @@ import grpc from 'grpc'
 var PROTO_PATH = './helloworld.proto';
 var proto = grpc.load(PROTO_PATH);
 
-var client = new proto.helloworld.Greeter('localhost:50051', grpc.credentials.createInsecure());
+import dotenv from 'dotenv'
+dotenv.config({ path: '.env'})
+
+var client = new proto.helloworld.Greeter(`${process.env.GRPC_HOST}:${process.env.GRPC_PORT}`, grpc.credentials.createInsecure());
 
 import grpcPromise from 'grpc-promise';
 grpcPromise.promisifyAll(client);

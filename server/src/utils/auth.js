@@ -1,20 +1,21 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt-nodejs');
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt-nodejs'
+import dotenv from 'dotenv'
 
-const config = require('../config');
+dotenv.config({ path: '.env'})
 
 exports.getTokenFromRequest = req => (
   req.body.token || req.params.token || req.headers.authorization
 );
 
 exports.createToken = payload => (
-  jwt.sign(payload, config.auth.secret, {
-    expiresIn: config.auth.expiresIn
+  jwt.sign(payload, process.env.AUTH_SECRET, {
+    expiresIn: process.env.AUTH_EXPIRES_IN
   })
 );
 
 exports.verifyToken = (token, callback) => {
-  jwt.verify(token, config.auth.secret, (err, decoded) => {
+  jwt.verify(token, process.env.AUTH_SECRET, (err, decoded) => {
     if (err) {
       return callback(err);
     }

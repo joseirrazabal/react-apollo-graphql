@@ -5,6 +5,7 @@
   "dependencies": {
     "apollo-client": "^1.1.1",
     "apollo-test-utils": "^0.1.1",
+    "dotenv": "^4.0.0",
     "false": "0.0.4",
     "graphql": "^0.10.1",
     "graphql-tools": "^0.10.0",

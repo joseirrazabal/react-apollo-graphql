@@ -1167,6 +1167,10 @@ detect-libc@^1.0.2:
   version "1.0.2"
   resolved "http://10.0.41.30:8080/detect-libc/-/detect-libc-1.0.2.tgz#71ad5d204bf17a6a6ca8f450c61454066ef461e1"
 
+dotenv@^4.0.0:
+  version "4.0.0"
+  resolved "http://10.0.41.30:8080/dotenv/-/dotenv-4.0.0.tgz#864ef1379aced55ce6f95debecdce179f7a0cd1d"
+
 dtrace-provider@~0.8:
   version "0.8.5"
   resolved "http://10.0.41.30:8080/dtrace-provider/-/dtrace-provider-0.8.5.tgz#98ebba221afac46e1c39fd36858d8f9367524b92"
