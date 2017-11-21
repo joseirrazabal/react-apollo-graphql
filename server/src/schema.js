@@ -22,12 +22,6 @@ type Message {
   text: String
 }
 
-# This type specifies the entry points into our API
-type Query {
-  channels: [Channel]    # "[]" means this is a list of channels
-  channel(name: String!): Channel
-}
-
 # Error type.
 type Error {
   key: String
@@ -41,11 +35,26 @@ type User {
   modifiedAt: String
   lastLogin: String
 }
+# Role
+type Role {
+  id: String
+  name: String
+  createdAt: String
+}
+
 # Auth type.
 type Auth {
   token: String
   user: User
   errors: [Error]
+}
+
+# This type specifies the entry points into our API
+type Query {
+  channels: [Channel]    # "[]" means this is a list of channels
+  channel(name: String!): Channel
+  getUser(id: ID!): User 
+  getRole(id: ID!): Role
 }
 
 # The mutation root type, used to define all mutations
