@@ -1,9 +1,11 @@
 import {
   makeExecutableSchema,
   addMockFunctionsToSchema,
+  mergeSchemas
 } from 'graphql-tools';
 
 import { resolvers } from './resolvers';
+import grpcCompose from "../grpcComposer";
 
 const typeDefs = `
 type Channel {
@@ -51,7 +53,6 @@ type Auth {
 
 # This type specifies the entry points into our API
 type Query {
-  channels: [Channel]    # "[]" means this is a list of channels
   channel(name: String!): Channel
   getUser(id: ID!): User 
   getRole(id: ID!): Role
@@ -71,5 +72,9 @@ type Subscription {
 }
 `;
 
-const schema = makeExecutableSchema({ typeDefs, resolvers });
+const LocalSchema = makeExecutableSchema({ typeDefs, resolvers });
+
+ const schema = mergeSchemas({
+    schemas: [ grpcCompose.schema, LocalSchema],
+  });
 export { schema };

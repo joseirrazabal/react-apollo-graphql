@@ -52,7 +52,8 @@ db.once('open', () => console.log('We are connected!'));
 	// usando el esquema ejecutable que creamos
 	app.use('/graphql', bodyParser.json(), graphqlExpress( (req) => { 
 		return {
-			schema: grpcCompose.schema,
+			// schema: grpcCompose.schema,
+			schema: schema,
 			context: grpcCompose.createContext({
 				token: req.get("token"),
 				channel: {

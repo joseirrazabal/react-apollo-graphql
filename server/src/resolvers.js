@@ -21,6 +21,7 @@ grpcPromise.promisifyAll(client);
 
 export const resolvers = {
 	Query: {
+		/*
 		channels: () => {
 			// return new Promise((resolve, reject) => {
 			// 	client.sayHello({ name: "user" }, function (err, response) {
@@ -35,6 +36,7 @@ export const resolvers = {
 			
 			// return Channel.find({}).then((response) => { return response });
 		},
+		*/
 		channel: (root, { name }) => {
 			return Channel.findOne({ name }).then((response) => response);
 		},
