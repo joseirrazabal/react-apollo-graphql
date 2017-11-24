@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package channel;
+
+service Channel {
+  rpc getAll(Params) returns (ItemResponse) {}
+}
+
+message Params{}
+
+message ItemResponse {
+    repeated Item items = 1;
+}
+
+message Item {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+}

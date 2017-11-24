@@ -36,7 +36,7 @@ class ChannelsList extends Component {
   }
 
   render() {
-    const { data: {loading, error, channels } } = this.props;
+    const { data: {loading, error, Channels } } = this.props;
 
     if (loading) {
       return <p>Loading ...</p>;
@@ -48,7 +48,7 @@ class ChannelsList extends Component {
     return (
       <div className="channelsList">
         <AddChannel />
-        { channels.map( ch =>
+        { Channels.items.map( ch =>
           (<div key={ch.id} className={'channel ' + (ch.id < 0 ? 'optimistic' : '')}>
             <Link to={ch.id < 0 ? `/` : `channel/${ch.id}`}>
               {ch.name}
@@ -62,9 +62,11 @@ class ChannelsList extends Component {
 
 export const channelsListQuery = gql`
   query ChannelsListQuery {
-    channels {
-      id
-      name
+    Channels {
+		items {
+			id
+			name
+		}
     }
   }
 `;

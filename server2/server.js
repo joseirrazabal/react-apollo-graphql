@@ -4,13 +4,13 @@ import grpc from 'grpc'
 
 dotenv.config({ path: '.env'});
 
-var PROTO_PATH = './helloworld.proto';
-var proto = grpc.load(PROTO_PATH)
+var PROTO_PATH = './channel.proto';
+var proto = grpc.load(PROTO_PATH).channel
 
-function sayHello(call, callback) {
+function getAll(call, callback) {
 	var result = []
-	result.push({ _id: "5a0cae787f21fa41607cdd19", id: "5a0cae787f21fa41607cdd19", name: 'micro01', description: 'description' })
-	callback(null, { message: JSON.stringify(result) });
+	result.push({ id: "5a0cae787f21fa41607cdd19", name: 'micro01', description: 'description' })
+	callback(null, result );
 
 	// kafka
 	sendKafka(3)
@@ -19,7 +19,7 @@ function sayHello(call, callback) {
 // GRPC
 var server = new grpc.Server();
 
-server.addService(proto.helloworld.Greeter.service, { sayHello: sayHello });
+server.addService(proto.Channel.service, { getAll: getAll });
 
 server.bind(`${process.env.GRPC_HOST}:${process.env.GRPC_PORT}`, grpc.ServerCredentials.createInsecure());
 server.start();

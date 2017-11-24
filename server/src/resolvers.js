@@ -8,13 +8,13 @@ import pubsub from '../pubsub'
 
 import grpc from 'grpc'
 
-var PROTO_PATH = './helloworld.proto';
-var proto = grpc.load(PROTO_PATH);
+var PROTO_PATH = './channel.proto';
+var proto = grpc.load(PROTO_PATH).channel;
 
 import dotenv from 'dotenv'
 dotenv.config({ path: '.env'})
 
-var client = new proto.helloworld.Greeter(`${process.env.GRPC_HOST}:${process.env.GRPC_PORT}`, grpc.credentials.createInsecure());
+var client = new proto.Channel(`${process.env.GRPC_HOST}:${process.env.GRPC_PORT}`, grpc.credentials.createInsecure());
 
 import grpcPromise from 'grpc-promise';
 grpcPromise.promisifyAll(client);
@@ -28,8 +28,8 @@ export const resolvers = {
 			// 	});
 			// })
 
-			return client.sayHello().sendMessage({ name: "user" }).then( response => {
-				return JSON.parse(response && response.message) || []
+			return client.getAll().sendMessage().then( response => {
+				return response.items
 			})
 			.catch( err => { return []})
 			

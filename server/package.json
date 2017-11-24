@@ -16,6 +16,8 @@
     "nodemon": "^1.11.0"
   },
   "dependencies": {
+    "@risingstack/jaeger": "^2.5.0",
+    "@risingstack/opentracing-auto": "^1.5.2",
     "avsc": "^5.0.7",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.17.1",
@@ -32,11 +34,14 @@
     "graphql-subscriptions": "^0.4.3",
     "graphql-tools": "^1.0.0",
     "grpc": "^1.7.1",
+    "grpc-graphql-router-tools": "^0.0.26",
     "grpc-promise": "^1.1.0",
+    "jaeger-client": "^3.7.0",
     "jsonwebtoken": "^8.1.0",
     "kafka-node": "^2.2.3",
     "mongoose": "^4.11.4",
     "node-rdkafka": "^2.1.1",
+    "opentracing": "^0.14.1",
     "subscriptions-transport-ws": "^0.7.3",
     "validator": "^9.1.1"
   }

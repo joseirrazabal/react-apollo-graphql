@@ -10,8 +10,9 @@ import dotenv from 'dotenv'
 
 import { schema } from './src/schema';
 import pubsub from './pubsub'
+import grpcCompose from "./grpcComposer";
 
-dotenv.config({ path: '.env'})
+dotenv.config({ path: '.env' })
 
 mongoose.connect(`mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`, { useMongoClient: true });
 
@@ -49,7 +50,19 @@ db.once('open', () => console.log('We are connected!'));
 
 	// definimos la URL `/graphql` que usa los middlewares `body-parser` y el `graphqlExpress`
 	// usando el esquema ejecutable que creamos
-	app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
+	app.use('/graphql', bodyParser.json(), graphqlExpress( (req) => { 
+		return {
+			schema: grpcCompose.schema,
+			context: grpcCompose.createContext({
+				token: req.get("token"),
+				channel: {
+					ip: "localhost",
+					port: 50051 
+				}
+			})
+		};
+
+	}));
 
 	// si no estamos en producción
 	if (process.env.NODE_ENV !== 'production') {
