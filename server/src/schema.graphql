@@ -1,17 +1,6 @@
-import {
-  makeExecutableSchema,
-  addMockFunctionsToSchema,
-  mergeSchemas
-} from 'graphql-tools';
-
-import { resolvers } from './resolvers';
-import grpcCompose from "../grpcComposer";
-
-const typeDefs = `
 type Channel {
-  id: ID!                # "!" denotes a required field
+  id: ID!
   name: String
-  # messages: [Message]!
 }
 
 input MessageInput{
@@ -53,6 +42,7 @@ type Auth {
 
 # This type specifies the entry points into our API
 type Query {
+  channels(token: String!): [Channel]
   channel(name: String!): Channel
   getUser(id: ID!): User 
   getRole(id: ID!): Role
@@ -70,11 +60,9 @@ type Subscription {
   channelAdded: Channel
   messageAdded(channelId: ID!): Message
 }
-`;
 
-const LocalSchema = makeExecutableSchema({ typeDefs, resolvers });
-
- const schema = mergeSchemas({
-    schemas: [ grpcCompose.schema, LocalSchema],
-  });
-export { schema };
+schema {
+	query: Query
+	mutation: Mutation 
+	subscription: Subscription
+}

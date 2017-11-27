@@ -8,7 +8,7 @@ import { SubscriptionManager } from 'graphql-subscriptions';
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 
-import { schema } from './src/schema';
+import { schema, LocalSchema } from './src';
 import pubsub from './pubsub'
 import grpcCompose from "./grpcComposer";
 
@@ -34,7 +34,7 @@ db.once('open', () => console.log('We are connected!'));
 	// creamos nuestro administrador de suscripciones usando nuestro esquema ejecutable
 	// y nuestro módulo de PubSub y definimos como manejar cada suscripción
 	const subscriptionManager = new SubscriptionManager({
-		schema,
+		LocalSchema,
 		pubsub,
 		setupFunctions: {
 			// cuando alguien se suscribe a `todoUpdated` solo mandamos las del ID al que se suscribe
@@ -52,7 +52,6 @@ db.once('open', () => console.log('We are connected!'));
 	// usando el esquema ejecutable que creamos
 	app.use('/graphql', bodyParser.json(), graphqlExpress( (req) => { 
 		return {
-			// schema: grpcCompose.schema,
 			schema: schema,
 			context: grpcCompose.createContext({
 				token: req.get("token"),
@@ -62,7 +61,6 @@ db.once('open', () => console.log('We are connected!'));
 				}
 			})
 		};
-
 	}));
 
 	// si no estamos en producción

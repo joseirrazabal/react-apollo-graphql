@@ -10,6 +10,7 @@ var proto = grpc.load(PROTO_PATH).channel
 function getAll(call, callback) {
 	var result = []
 	result.push({ id: "5a0cae787f21fa41607cdd19", name: 'micro01', description: 'description' })
+	result.push({ id: "5a0cae787f31fa41607cdd19", name: 'micro02', description: 'description' })
 	callback(null, result );
 
 	// kafka
@@ -57,7 +58,7 @@ function sendKafka(x) {
 	var messageBuffer = {
 		"channel": "channelAdded",
 		"channelAdded": {
-			id: "5a0cae787f21fa31607cd123d19" + x,
+			id: "5a3cae787f21fa31607cd123d19" + x,
 			name: "prueba" + x,
 			description: 'description'
 		}

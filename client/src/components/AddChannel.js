@@ -4,41 +4,37 @@ import { gql, graphql } from 'react-apollo';
 import { channelsListQuery } from './ChannelsListWithData';
 
 const AddChannel = ({ mutate }) => {
-  const handleKeyUp = (evt) => {
-    if (evt.keyCode === 13) {
-      mutate({
-        variables: { name: evt.target.value },
-        optimisticResponse: {
-          addChannel: {
-            name: evt.target.value,
-            id: Math.round(Math.random() * -1000000),
-            __typename: 'Channel',
-          },
-        },
-        update: (store, { data: { addChannel } }) => {
-          // Read the data from the cache for this query.
-          const data = store.readQuery({ query: channelsListQuery });
+	const handleKeyUp = (evt) => {
+		if (evt.keyCode === 13) {
+			mutate({
+				variables: { name: evt.target.value },
+				optimisticResponse: {
+					addChannel: {
+						name: evt.target.value,
+						id: Math.round(Math.random() * -1000000),
+						__typename: 'Channel',
+					},
+				},
+				update: (store, { data: { addChannel } }) => {
+					const data = store.readQuery({
+						query: channelsListQuery,
+						variables: { token: "prueba" }
+					});
+					data.channels.push(addChannel);
+					store.writeQuery({ query: channelsListQuery, variables: { token: "prueba" }, data });
+				},
+			});
+			evt.target.value = '';
+		}
+	};
 
-          // don't double add the message
-          if (!data.channels.find((msg) => msg.id === addChannel.id)) {
-            // Add our channel from the mutation to the end.
-            data.channels.push(addChannel);
-          }
-          // Write the data back to the cache.
-          store.writeQuery({ query: channelsListQuery, data });
-        },
-      });
-      evt.target.value = '';
-    }
-  };
-
-  return (
-    <input
-      type="text"
-      placeholder="New channel"
-      onKeyUp={handleKeyUp}
-    />
-  );
+	return (
+		<input
+			type="text"
+			placeholder="New channel"
+			onKeyUp={handleKeyUp}
+		/>
+	);
 };
 
 const addChannelMutation = gql`
@@ -50,9 +46,8 @@ const addChannelMutation = gql`
   }
 `;
 
-
 const AddChannelWithMutation = graphql(
-  addChannelMutation,
+	addChannelMutation,
 )(AddChannel);
 
 export default AddChannelWithMutation;

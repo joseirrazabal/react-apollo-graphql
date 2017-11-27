@@ -1,42 +1,22 @@
 import { withFilter } from 'graphql-subscriptions';
-
-import connector from './connectors'
-import Channel from './models/Channel'
-import User from './models/User'
-
 import pubsub from '../pubsub'
 
-import grpc from 'grpc'
+import connector from './connectors'
+import { User, Channel } from './db/models'
+import { ChannelService } from './grpc'
 
-var PROTO_PATH = './channel.proto';
-var proto = grpc.load(PROTO_PATH).channel;
-
-import dotenv from 'dotenv'
-dotenv.config({ path: '.env'})
-
-var client = new proto.Channel(`${process.env.GRPC_HOST}:${process.env.GRPC_PORT}`, grpc.credentials.createInsecure());
-
-import grpcPromise from 'grpc-promise';
-grpcPromise.promisifyAll(client);
-
-export const resolvers = {
+const resolvers = {
 	Query: {
-		/*
-		channels: () => {
-			// return new Promise((resolve, reject) => {
-			// 	client.sayHello({ name: "user" }, function (err, response) {
-			// 		resolve(JSON.parse(response && response.message) || [])
-			// 	});
+		channels: (root, { token }) => {
+			// return ChannelService.getAll().sendMessage({ token: "123" }).then( response => {
+			// 	return response.items
 			// })
-
-			return client.getAll().sendMessage().then( response => {
-				return response.items
-			})
-			.catch( err => { return []})
+			// .catch( err => { 
+			// 	return []
+			// })
 			
-			// return Channel.find({}).then((response) => { return response });
+			return Channel.find({}).then((response) => { return response });
 		},
-		*/
 		channel: (root, { name }) => {
 			return Channel.findOne({ name }).then((response) => response);
 		},
@@ -124,3 +104,5 @@ export const resolvers = {
 		}
 	},
 };
+
+export default resolvers

@@ -36,7 +36,7 @@ class ChannelsList extends Component {
   }
 
   render() {
-    const { data: {loading, error, Channels } } = this.props;
+    const { data: {loading, error, channels } } = this.props;
 
     if (loading) {
       return <p>Loading ...</p>;
@@ -48,7 +48,7 @@ class ChannelsList extends Component {
     return (
       <div className="channelsList">
         <AddChannel />
-        { Channels.items.map( ch =>
+        { channels.map( ch =>
           (<div key={ch.id} className={'channel ' + (ch.id < 0 ? 'optimistic' : '')}>
             <Link to={ch.id < 0 ? `/` : `channel/${ch.id}`}>
               {ch.name}
@@ -61,16 +61,16 @@ class ChannelsList extends Component {
 }
 
 export const channelsListQuery = gql`
-  query ChannelsListQuery {
-    Channels {
-		items {
-			id
-			name
-		}
+  query ChannelsListQuery ($token: String!) {
+    channels(token: $token) {
+		id
+		name
     }
   }
 `;
 
 export default (graphql(channelsListQuery, {
-  options: (props) => ({}),
+  options: (props) => ({
+    variables: { token: "prueba" },
+  }),
 })(ChannelsList));

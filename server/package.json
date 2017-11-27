@@ -19,6 +19,7 @@
     "@risingstack/jaeger": "^2.5.0",
     "@risingstack/opentracing-auto": "^1.5.2",
     "avsc": "^5.0.7",
+    "babel-plugin-inline-import": "^2.0.6",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.17.1",
     "cors": "^2.8.3",

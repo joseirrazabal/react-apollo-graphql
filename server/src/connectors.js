@@ -9,8 +9,7 @@ const {
 	comparePassword
   } = require('./utils/auth');
 
-import Channel from './models/Channel'
-import User from './models/User'
+import { User, Channel } from './db/models'
 
 const connector = {
 	Auth: {

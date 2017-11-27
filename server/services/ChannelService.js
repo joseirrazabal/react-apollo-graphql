@@ -9,8 +9,8 @@ import {
 	BooleanType
 } from "grpc-graphql-router-tools";
 
-import services from "../channel_grpc_pb";
-import messages from "../channel_pb";
+import services from "../src/grpc/protos/channel_grpc_pb";
+import messages from "../src/grpc/protos/channel_pb";
 
 const ChannelConnection = new DomainEntity({
 	name: "ItemResponse",

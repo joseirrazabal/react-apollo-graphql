@@ -6,7 +6,9 @@ service Channel {
   rpc getAll(Params) returns (ItemResponse) {}
 }
 
-message Params{}
+message Params{
+	string token = 1;
+}
 
 message ItemResponse {
     repeated Item items = 1;
