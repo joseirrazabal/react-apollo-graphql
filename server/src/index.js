@@ -1,5 +1,4 @@
 import { makeExecutableSchema, mergeSchemas } from 'graphql-tools'
-import { makeExecutableSchema} from 'graphql-tools'
 
 import GraphQLSchema from './schema.graphql'
 import resolvers from './resolvers'
