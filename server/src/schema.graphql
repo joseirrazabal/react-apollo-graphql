@@ -61,8 +61,8 @@
 	messageAdded(channelId: ID!): Message
   }
 
-schema {
-	query: Query
-	mutation: Mutation 
-	subscription: Subscription
-}
+# schema {
+# 	query: Query
+# 	mutation: Mutation 
+# 	subscription: Subscription
+# }

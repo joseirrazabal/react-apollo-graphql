@@ -66,7 +66,7 @@ function sendKafka(x) {
 
 	// Create a new payload
 	var payload = [{
-		topic: 'topic-test',
+		topic: process.env.KAFKA_TOPIC,
 		messages: JSON.stringify(messageBuffer),
 		attributes: 1 // !* Use GZip compression for the payload *!/
 	}];
