@@ -7,15 +7,10 @@ import { ChannelService } from './grpc'
 
 const resolvers = {
 	Query: {
-		channels: (root, { token }) => {
-			// return ChannelService.getAll().sendMessage({ token: "123" }).then( response => {
-			// 	return response.items
-			// })
-			// .catch( err => { 
-			// 	return []
-			// })
+		channels: async (root, { token }) => {
+			return (await ChannelService.getAllAsync({ token: "123" })).items || []
 			
-			return Channel.find({}).then((response) => { return response });
+			// return Channel.find({}).then((response) => { return response });
 		},
 		channel: (root, { name }) => {
 			return Channel.findOne({ name }).then((response) => response);

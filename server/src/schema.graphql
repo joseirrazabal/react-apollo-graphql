@@ -42,7 +42,7 @@
   
   # This type specifies the entry points into our API
   type Query {
-	channels: [Channel]
+	channels(token: String!): [Channel]
 	channel(name: String!): Channel
 	getUser(id: ID!): User 
 	getRole(id: ID!): Role
