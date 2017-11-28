@@ -34,8 +34,8 @@ db.once('open', () => console.log('We are connected!'));
 	// creamos nuestro administrador de suscripciones usando nuestro esquema ejecutable
 	// y nuestro módulo de PubSub y definimos como manejar cada suscripción
 	const subscriptionManager = new SubscriptionManager({
-		LocalSchema,
-		pubsub,
+		schema: LocalSchema,
+		pubsub: pubsub,
 		setupFunctions: {
 			// cuando alguien se suscribe a `todoUpdated` solo mandamos las del ID al que se suscribe
 			// todoUpdated(options, args) {
