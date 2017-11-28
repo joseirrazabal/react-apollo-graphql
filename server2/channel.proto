@@ -3,14 +3,14 @@ syntax = "proto3";
 package channel;
 
 service Channel {
-  rpc getAll(Params) returns (ItemResponse) {}
+  rpc getAll(GetAllRequest) returns (GetAllResponse) {}
 }
 
-message Params{
+message GetAllRequest { 
 	string token = 1;
 }
 
-message ItemResponse {
+message GetAllResponse {
     repeated Item items = 1;
 }
 

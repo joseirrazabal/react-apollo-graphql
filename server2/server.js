@@ -8,6 +8,7 @@ var PROTO_PATH = './channel.proto';
 var proto = grpc.load(PROTO_PATH).channel
 
 function getAll(call, callback) {
+	console.log(call.request.token)
 	var result = []
 	result.push({ id: "5a0cae787f21fa41607cdd19", name: 'micro01', description: 'description' })
 	result.push({ id: "5a0cae787f31fa41607cdd19", name: 'micro02', description: 'description' })

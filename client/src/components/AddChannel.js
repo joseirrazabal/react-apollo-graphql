@@ -18,7 +18,7 @@ const AddChannel = ({ mutate }) => {
 				update: (store, { data: { addChannel } }) => {
 					const data = store.readQuery({
 						query: channelsListQuery,
-						variables: { token: "prueba" }
+						variables: { params: { token: "prueba" } }
 					});
 					data.channels.push(addChannel);
 					store.writeQuery({ query: channelsListQuery, variables: { token: "prueba" }, data });

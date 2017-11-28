@@ -61,8 +61,8 @@ class ChannelsList extends Component {
 }
 
 export const channelsListQuery = gql`
-  query ChannelsListQuery ($token: String!) {
-    channels(token: $token) {
+  query ChannelsListQuery ($inpu: ChannelsInput) {
+    channels(params: $inpu) {
 		id
 		name
     }
@@ -71,6 +71,6 @@ export const channelsListQuery = gql`
 
 export default (graphql(channelsListQuery, {
   options: (props) => ({
-    variables: { token: "prueba" },
+    variables: { params: { token: "prueba" } },
   }),
 })(ChannelsList));

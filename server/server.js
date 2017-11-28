@@ -34,7 +34,7 @@ db.once('open', () => console.log('We are connected!'));
 	// creamos nuestro administrador de suscripciones usando nuestro esquema ejecutable
 	// y nuestro módulo de PubSub y definimos como manejar cada suscripción
 	const subscriptionManager = new SubscriptionManager({
-		schema: LocalSchema,
+		schema: schema,
 		pubsub: pubsub,
 		setupFunctions: {
 			// cuando alguien se suscribe a `todoUpdated` solo mandamos las del ID al que se suscribe
@@ -50,19 +50,19 @@ db.once('open', () => console.log('We are connected!'));
 
 	// definimos la URL `/graphql` que usa los middlewares `body-parser` y el `graphqlExpress`
 	// usando el esquema ejecutable que creamos
-	app.use('/graphql', bodyParser.json(), graphqlExpress( (req) => { return { schema: LocalSchema } })) 
-	// app.use('/graphql', bodyParser.json(), graphqlExpress( (req) => { 
-	// 	return {
-	// 		schema: schema,
-	// 		context: grpcCompose.createContext({
-	// 			token: req.get("token"),
-	// 			channel: {
-	// 				ip: "localhost",
-	// 				port: 50051 
-	// 			}
-	// 		})
-	// 	};
-	// }));
+	// app.use('/graphql', bodyParser.json(), graphqlExpress( (req) => { return { schema: LocalSchema } })) 
+	app.use('/graphql', bodyParser.json(), graphqlExpress( (req) => { 
+		return {
+			schema: schema,
+			context: grpcCompose.createContext({
+				token: req.get("token"),
+				channel: {
+					ip: "localhost",
+					port: 50051 
+				}
+			})
+		};
+	}));
 
 	// si no estamos en producción
 	if (process.env.NODE_ENV !== 'production') {
