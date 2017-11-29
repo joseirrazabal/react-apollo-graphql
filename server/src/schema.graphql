@@ -40,9 +40,13 @@
 	errors: [Error]
   }
   
+  input ChannelsaInput {
+	token: String
+  }
+
   # This type specifies the entry points into our API
   type Query {
-	# channels(token: String!): [Channel]
+	channelsa(params: ChannelsaInput): [Channel]
 	channel(name: String!): Channel
 	getUser(id: ID!): User 
 	getRole(id: ID!): Role

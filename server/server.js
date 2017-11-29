@@ -56,7 +56,7 @@ db.once('open', () => console.log('We are connected!'));
 			schema: schema,
 			context: grpcCompose.createContext({
 				token: req.get("token"),
-				channel: {
+				Channel: {
 					ip: "localhost",
 					port: 50051 
 				}

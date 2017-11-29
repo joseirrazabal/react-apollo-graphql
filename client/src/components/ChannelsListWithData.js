@@ -61,8 +61,8 @@ class ChannelsList extends Component {
 }
 
 export const channelsListQuery = gql`
-  query ChannelsListQuery ($inpu: ChannelsInput) {
-    channels(params: $inpu) {
+  query ChannelsListQuery ($input: ChannelsInput) {
+    channels(params: $input) {
 		id
 		name
     }

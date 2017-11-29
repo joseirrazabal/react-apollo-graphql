@@ -4,7 +4,7 @@ import ChannelService from "./services/ChannelService";
 
 export default new DomainCompose({
 	domainServices: {
-		channel: {
+		Channel: {
 			type: ChannelService 
 		}
 	}

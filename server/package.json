@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon ./server.js --exec babel-node -e js",
+    "build": "nodemon ./src/grpc/protos/gen.js --exec babel-node -e js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -43,6 +44,7 @@
     "mongoose": "^4.11.4",
     "node-rdkafka": "^2.1.1",
     "opentracing": "^0.14.1",
+    "string-capitalize": "^1.0.1",
     "subscriptions-transport-ws": "^0.7.3",
     "validator": "^9.1.1"
   }

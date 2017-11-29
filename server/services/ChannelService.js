@@ -19,7 +19,7 @@ const Channel = new DomainEntity({
 });
 
 export default new DomainService({
-	name: "channel",
+	name: "Channel",
 	messages: messages,
 	services: services,
 	methods: {

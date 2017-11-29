@@ -3343,6 +3343,10 @@ stream-combiner@~0.0.4:
   dependencies:
     duplexer "~0.1.1"
 
+string-capitalize@^1.0.1:
+  version "1.0.1"
+  resolved "http://10.0.41.30:8080/string-capitalize/-/string-capitalize-1.0.1.tgz#a8665f77361b4ce04a6bde6d9bbb21712bb9749e"
+
 string-template@~0.2.1:
   version "0.2.1"
   resolved "http://10.0.41.30:8080/string-template/-/string-template-0.2.1.tgz#42932e598a352d01fc22ec3367d9d84eec6c9add"
