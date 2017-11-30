@@ -3,10 +3,9 @@ import path from 'path'
 import grpc from 'grpc'
 import capitalize from 'string-capitalize'
 
-
 let filter = ["proto"]
-async function ls(dirPath, filter = []) {
-	let stat = await fs.statSync(dirPath)
+function ls(dirPath, filter = []) {
+	let stat = fs.statSync(dirPath)
 
 	if (!stat.isDirectory()) {
 		var data = path.parse(path.join(dirPath))
@@ -17,63 +16,62 @@ async function ls(dirPath, filter = []) {
 	}
 
 	let filenames = []
-	for (let name of await fs.readdirSync(dirPath)) {
-		let result = await ls(path.join(dirPath, name), filter)
+	for (let name of fs.readdirSync(dirPath)) {
+		let result = ls(path.join(dirPath, name), filter)
 		filenames.push(...result)
 	}
 
 	return filenames
 }
 
-(async () => {
-	let files = await ls("./src/grpc/protos/", filter)
+let files = ls("./src/grpc/protos/", filter)
 
-	var protos = []
-	files.map(file => {
-		protos.push(grpc.load('./src/grpc/protos/channel.proto').channel);
-	})
+files.map(file => {
+	var proto = grpc.load(file);
+
+	var fileData = path.parse(path.join(file))
 
 	let services = []
 	let messages
-	await protos.map(async proto => {
-		await Object.keys(proto).map(async (key) => {
-			if (proto[key].service) {
+	Object.keys(proto).map(async (serviceName) => {
+		Object.keys(proto[serviceName]).map(async (key) => {
+			if (proto[serviceName][key].service) {
 				let funciones = []
-				await Object.keys(proto[key].service).map(async (func) => {
+				Object.keys(proto[serviceName][key].service).map(async (func) => {
 					let request = []
-					let requestName = proto[key].service[func].requestType.name
-					await Object.keys(proto[key].service[func].requestType.children).map(async (child) => {
-						let name = proto[key].service[func].requestType.children[child].name
-						let type = proto[key].service[func].requestType.children[child].type
+					let requestName = proto[serviceName][key].service[func].requestType.name
+					Object.keys(proto[serviceName][key].service[func].requestType.children).map(async (child) => {
+						let name = proto[serviceName][key].service[func].requestType.children[child].name
+						let type = proto[serviceName][key].service[func].requestType.children[child].type
 
 						request.push({ name: name, type: type })
 					})
 
 					let response = []
-					let responseName = proto[key].service[func].responseType.name
-					await Object.keys(proto[key].service[func].responseType.children).map(async (child) => {
+					let responseName = proto[serviceName][key].service[func].responseType.name
+					Object.keys(proto[serviceName][key].service[func].responseType.children).map(async (child) => {
 						let fields = []
 
 						// nombre objeto con campos 
-						let nameField = proto[key].service[func].responseType.children[child].name
+						let nameField = proto[serviceName][key].service[func].responseType.children[child].name
 
 						// si el campo no es repeat 
-						if (!proto[key].service[func].responseType.children[child].repeated) {
+						if (!proto[serviceName][key].service[func].responseType.children[child].repeated) {
 							let responseChild = { name: nameField, repeated: false, value: [] }
 
-							let name = proto[key].service[func].responseType.resolvedType.children[field].name
-							let type = proto[key].service[func].responseType.resolvedType.children[field].type.name
+							let name = proto[serviceName][key].service[func].responseType.resolvedType.children[field].name
+							let type = proto[serviceName][key].service[func].responseType.resolvedType.children[field].type.name
 
 							responseChild.value.push({ name: name, type: type })
 						} else {
 							// nombre objeto con campos 
-							let objName = proto[key].service[func].responseType.children[child].resolvedType.name
+							let objName = proto[serviceName][key].service[func].responseType.children[child].resolvedType.name
 
 							let responseChild = { nameRepeated: nameField, name: objName, repeated: true, value: [] }
 
-							await Object.keys(proto[key].service[func].responseType.children[child].resolvedType.children).map(async (field) => {
-								let name = proto[key].service[func].responseType.children[child].resolvedType.children[field].name
-								let type = proto[key].service[func].responseType.children[child].resolvedType.children[field].type.name
+							Object.keys(proto[serviceName][key].service[func].responseType.children[child].resolvedType.children).map(async (field) => {
+								let name = proto[serviceName][key].service[func].responseType.children[child].resolvedType.children[field].name
+								let type = proto[serviceName][key].service[func].responseType.children[child].resolvedType.children[field].type.name
 
 								responseChild.value.push({ name: name, type: type })
 							})
@@ -85,14 +83,13 @@ async function ls(dirPath, filter = []) {
 				})
 				services.push({ name: key, value: funciones })
 			}
-		});
-	})
+		})
+	});
 
-	console.log(JSON.stringify(services, null, 2))
+	// console.log(JSON.stringify(services, null, 2))
 
 	var entity
-
-	await messages.map(async message => {
+	messages.map(async message => {
 		entity = `
 		const ${message.name} = new DomainEntity({
 			name: "${message.name}",
@@ -112,12 +109,11 @@ async function ls(dirPath, filter = []) {
 	})
 
 	var domain
-	await services.map(async service => {
+	services.map(async service => {
 		let name = service.name
 
 		service.value.map(func => {
-			domain = `
-		export default new DomainService({
+			domain = `export default new DomainService({
 			name: "${name}",
 			messages: messages,
 			services: services,
@@ -130,14 +126,12 @@ async function ls(dirPath, filter = []) {
 					args: {
 					${
 				func.requestValue.map(val =>
-					`
-						${val.name}: {
+					`	${val.name}: {
 							type: ${capitalize(val.type.name)}Type
 						}
 						`
 				)
 				}
-
 					}
 				},
 			}
@@ -146,10 +140,16 @@ async function ls(dirPath, filter = []) {
 		})
 	})
 
-	console.log(`
+	var stream = fs.createWriteStream(`services/${fileData.name}Service.js`);
+	stream.once('open', function(fd) {
+	  stream.write(`
 		import { DomainService,	METHOD_TYPES, DomainEntity,	IdType, StringType,	ListType, IntType, BooleanType } from "grpc-graphql-router-tools";
+
+		import services from "../${fileData.dir}/${fileData.name}_grpc_pb";
+		import messages from "../${fileData.dir}/${fileData.name}_pb";
 		${entity}
 		${domain}
-	`)
-
-})();
+	  `);
+	  stream.end();
+	});
+})
