@@ -2,7 +2,7 @@ import express from 'express';
 import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { createServer } from 'http';
+import { createServer, http } from 'http';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { SubscriptionManager } from 'graphql-subscriptions';
 import mongoose from 'mongoose'
@@ -12,16 +12,20 @@ import { schema, LocalSchema } from './src';
 import pubsub from './pubsub'
 import grpcCompose from "./grpcComposer";
 
-dotenv.config({ path: '.env' })
-
-mongoose.connect(`mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`, { useMongoClient: true });
-
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'Connection error:'));
-db.once('open', () => console.log('We are connected!'));
+import initTracer from './tracer'
+import { Tags, FORMAT_HTTP_HEADERS } from 'opentracing'
 
 // creamos una función asíncrona autoejecutable para poder usar Async/Await
 (async () => {
+	dotenv.config()
+
+	mongoose.connect(`mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`, { useMongoClient: true });
+	const db = mongoose.connection;
+	db.on('error', console.error.bind(console, 'Connection error:'));
+	db.once('open', () => console.log('We are connected!'));
+
+	const tracer = initTracer('Server01');
+	
 	// creamos una aplicación de express y un servidor HTTP apartir de esta
 	const app = express();
 	const server = createServer(app);
@@ -51,14 +55,24 @@ db.once('open', () => console.log('We are connected!'));
 	// definimos la URL `/graphql` que usa los middlewares `body-parser` y el `graphqlExpress`
 	// usando el esquema ejecutable que creamos
 	// app.use('/graphql', bodyParser.json(), graphqlExpress( (req) => { return { schema: LocalSchema } })) 
-	app.use('/graphql', bodyParser.json(), graphqlExpress( (req) => { 
+	app.use('/graphql', bodyParser.json(), graphqlExpress((req) => {
+		const parentSpanContext = tracer.extract(FORMAT_HTTP_HEADERS, req.headers)
+		const span = tracer.startSpan('graph', { childOf: parentSpanContext, tags: { [Tags.SPAN_KIND]: Tags.SPAN_KIND_RPC_SERVER } });
+		span.log({
+			'event': 'graphql',
+			'query': req.body.query,
+			'variables': req.body.variables,
+			'operationName': req.body.operationName
+		});
+		span.finish();
+
 		return {
 			schema: schema,
 			context: grpcCompose.createContext({
 				token: req.get("token"),
 				Channel: {
 					ip: "localhost",
-					port: 50051 
+					port: 50051
 				}
 			})
 		};
