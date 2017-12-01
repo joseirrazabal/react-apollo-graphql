@@ -12,7 +12,8 @@ import { KafkaPubSub } from 'graphql-kafka-subscriptions'
 var pubsub = new KafkaPubSub({
 	topic: process.env.KAFKA_TOPIC,
 	host: process.env.KAFKA_HOST,
-	port: process.env.KAFKA_PORT,
+	// port: process.env.KAFKA_PORT,
+	port: 9092,
 })
 
 export default pubsub
