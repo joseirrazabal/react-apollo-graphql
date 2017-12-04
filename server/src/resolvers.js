@@ -7,9 +7,22 @@ import { ChannelService } from './grpc'
 
 const resolvers = {
 	Query: {
-		channelsa: async (root, { token }) => {
-			return (await ChannelService.getAllAsync({ token: token })).items || []
+		channelsa: async (root, { params }) => {
+			// return (await ChannelService.getAllAsync({ token: params.token })).items || []
 
+			return new Promise((resolve, reject) => {
+				var result = []
+
+				var call = ChannelService.prueba({ token: params && params.token || ''})
+				call.on('data', function(item) {
+					result.push(item)
+					// pubsub.publish({ 'channel': 'channelAdded', channelAdded: item });
+				});
+				call.on('end', function() {
+					return resolve(result)
+				})
+			})
+		
 			// return Channel.find({}).then((response) => { return response });
 		},
 		channel: (root, { name }) => {

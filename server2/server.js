@@ -7,8 +7,10 @@ dotenv.config({ path: '.env' });
 var PROTO_PATH = './channel.proto';
 var proto = grpc.load(PROTO_PATH).channel
 
-function getAll(call, callback) {
-	console.log(call.request.token)
+// function getAll(call, callback) {
+function getAll(call) {
+	// console.log(call.request)
+
 	var result = []
 	result.push({ id: "5a0cae787f21fa41607cdd19", name: 'micro01', description: 'description' })
 	result.push({ id: "5a0cae787f31fa41607cdd19", name: 'micro02', description: 'description' })
@@ -16,12 +18,26 @@ function getAll(call, callback) {
 
 	// kafka
 	sendKafka(3)
+	sendKafka(4)
+	sendKafka(5)
+}
+
+// stream
+function getPrueba(call) {
+	var result = []
+	result.push({ id: "5a0cae787f21fa41607cdd19", name: 'micro01', description: 'description' })
+	result.push({ id: "5a0cae787f31fa41607cdd19", name: 'micro02', description: 'description' })
+
+	result.map( item => {
+		call.write(item)
+	})
+	call.end()
 }
 
 // GRPC
 var server = new grpc.Server();
 
-server.addService(proto.Channel.service, { getAll: getAll });
+server.addService(proto.Channel.service, { getAll: getAll, prueba: getPrueba });
 
 server.bind(`${process.env.GRPC_HOST}:${process.env.GRPC_PORT}`, grpc.ServerCredentials.createInsecure());
 server.start();

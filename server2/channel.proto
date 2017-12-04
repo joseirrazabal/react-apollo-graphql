@@ -4,6 +4,7 @@ package channel;
 
 service Channel {
   rpc getAll(GetAllRequest) returns (GetAllResponse) {}
+  rpc prueba(GetAllRequest) returns (stream Item) {}
 }
 
 message GetAllRequest { 
