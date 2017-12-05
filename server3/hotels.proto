@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package hotels;
+
+service Hotels {
+    rpc GetHotels(HotelsRequest) returns (HotelsResponse) {}
+    rpc GetHotel(HotelRequest) returns (HotelResponse) {}
+}
+
+message HotelsRequest {
+
+}
+
+message HotelRequest {
+	Range range = 1;
+}
+
+message Range {
+	uint32 from = 1;
+	uint32 to = 2;
+}
+
+message HotelsResponse {
+    repeated Hotel hotels = 1;
+}
+
+message HotelResponse {
+    Hotel hotel = 1;
+}
+
+message Hotel {
+    uint32 id = 1;
+    string name = 2;
+    string description = 3;
+    repeated Rooms rooms = 4;
+}
+
+message Rooms {
+	string type = 1;
+	string price = 2;
+}

@@ -7,7 +7,7 @@ import { ChannelService } from './grpc'
 
 const resolvers = {
 	Query: {
-		channelsa: async (root, { params }) => {
+		channelsa: (root, { params } ) => {
 			// return (await ChannelService.getAllAsync({ token: params.token })).items || []
 
 			return new Promise((resolve, reject) => {

@@ -73,7 +73,12 @@ import { Tags, FORMAT_HTTP_HEADERS } from 'opentracing'
 				Channel: {
 					ip: "localhost",
 					port: 50051
-				}
+				},
+				// FlyGuide: {
+				// 	// ip: "172.16.20.61",
+				// 	ip: "localhost",
+				// 	port:50052 
+				// }
 			})
 		};
 	}));

@@ -24,9 +24,9 @@ class ChannelsList extends Component {
 
 				const newChannel = subscriptionData.data.channelAdded;
 
-				if (!prev.channels.find((msg) => msg.id === newChannel.id)) {
+				if (!prev.channelsa.find((msg) => msg.id === newChannel.id)) {
 					return Object.assign({}, prev, {
-						channels: [...prev.channels, newChannel]
+						channelsa: [...prev.channelsa, newChannel]
 					});
 				} else {
 					return prev;
@@ -36,7 +36,7 @@ class ChannelsList extends Component {
 	}
 
 	render() {
-		const {data: {loading, error, channels}} = this.props;
+		const {data: {loading, error, channelsa}} = this.props;
 
 		if (loading) {
 			return <p>Loading ...</p>;
@@ -50,7 +50,7 @@ class ChannelsList extends Component {
 				<div className="floating-box">
 					<div className="channelsList">
 						<AddChannel />
-						{ channels && channels.map(ch =>
+						{ channelsa && channelsa.map(ch =>
 							(<div key={ch.id} className={'channel ' + (ch.id < 0 ? 'optimistic' : '')}>
 								<Link to={ch.id < 0 ? `/` : `channel/${ch.id}`}>
 									{ch.name}
@@ -68,8 +68,8 @@ class ChannelsList extends Component {
 }
 
 export const channelsListQuery = gql`
-    query ChannelsListQuery ($input: ChannelsInput) {
-        channels(params: $input) {
+    query ChannelsListQuery ($input: ChannelsaInput) {
+        channelsa(params: $input) {
             id
             name
         }
@@ -78,6 +78,6 @@ export const channelsListQuery = gql`
 
 export default (graphql(channelsListQuery, {
 	options: (props) => ({
-		variables: {params: {token: "prueba"}},
+		variables: {input: { token: "prueba" }},
 	}),
 })(ChannelsList));

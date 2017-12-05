@@ -7,8 +7,7 @@ dotenv.config({ path: '.env' });
 var PROTO_PATH = './channel.proto';
 var proto = grpc.load(PROTO_PATH).channel
 
-// function getAll(call, callback) {
-function getAll(call) {
+function getAll(call, callback) {
 	// console.log(call.request)
 
 	var result = []
