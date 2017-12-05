@@ -28,3 +28,10 @@
   margin: auto;
   text-align: left;
 }
+
+.Primary {
+    width: 80px;
+    height: 20px;
+    background-color: #22A699;
+}
+
