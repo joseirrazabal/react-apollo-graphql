@@ -9,7 +9,7 @@ var proto = grpc.load(PROTO_PATH).hotels
 function getHotels(call, callback) {
 	var result = []
 	result.push({ 
-		id: "5a0cae787f21fa41607cdd19", 
+		id: 1, 
 		name: 'Ocean surf', 
 		description: 'Este hotel de estilo Art Deco se construyó en 1940 y se encuentra enfrente de la bonita playa de arena blanca. Justo al lado del hotel los visitantes encontrarán varios restaurantes y bares. Las exclusivas tiendas de Bal Harbour Shops, entre las que destacan Saks Fifth Avenue y Neiman Marcus, están a 3 km del hotel. South Beach está a 8 km de distancia. Este hotel es el lugar ideal para unas vacaciones en familia, una escapada romántica, un viaje de negocios o una escapada tropical improvisada.',
 		rooms: [
@@ -19,7 +19,7 @@ function getHotels(call, callback) {
 		]
 	})
 	result.push({ 
-		id: "5a0cae787f21fa41603cdd19", 
+		id: 2, 
 		name: 'Rodeway', 
 		description: 'Este hotel se construyó en 1940 y se encuentra enfrente de la bonita playa de arena blanca.',
 		rooms: [
@@ -28,7 +28,7 @@ function getHotels(call, callback) {
 		]
 	})
 	result.push({ 
-		id: "5a0cae787f21fa41602cdd19", 
+		id: 3, 
 		name: 'Indian creek', 
 		description: 'Este hotel de estilo Art.',
 		rooms: [
@@ -40,18 +40,20 @@ function getHotels(call, callback) {
 }
 
 function getHotel(call, callback) {
+	console.log("bien")
+
 	var result = {}
 	result = { 
-		id: "5a0cae787f21fa41607cdd19", 
+		id: 1, 
 		name: 'Ocean surf', 
 		description: 'Este hotel de estilo Art Deco se construyó en 1940 y se encuentra enfrente de la bonita playa de arena blanca. Justo al lado del hotel los visitantes encontrarán varios restaurantes y bares. Las exclusivas tiendas de Bal Harbour Shops, entre las que destacan Saks Fifth Avenue y Neiman Marcus, están a 3 km del hotel. South Beach está a 8 km de distancia. Este hotel es el lugar ideal para unas vacaciones en familia, una escapada romántica, un viaje de negocios o una escapada tropical improvisada.',
 		rooms: [
-			{ type: "single", price: 753 },
-			{ type: "doble ", price: 1387 },
-			{ type: "triple", price: 1968 }
+			{ type: "single", price: "753" },
+			{ type: "doble ", price: "1387" },
+			{ type: "triple", price: "1968" }
 		]
 	}
-	callback(null, result);
+	callback(null, { hotel: result});
 }
 
 // stream

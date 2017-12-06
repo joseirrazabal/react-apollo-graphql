@@ -3,234 +3,226 @@ import path from 'path'
 import grpc from 'grpc'
 import capitalize from 'string-capitalize'
 
-let filter = ["proto"]
-function ls(dirPath, filter = []) {
-	let stat = fs.statSync(dirPath)
+(async () => {
 
-	if (!stat.isDirectory()) {
-		var data = path.parse(path.join(dirPath))
-		if (filter.indexOf(data.ext.substr(1)) > -1) {
-			return [dirPath]
+	let filter = ["proto"]
+
+	function ls(dirPath, filter = []) {
+		let stat = fs.statSync(dirPath)
+
+		if (!stat.isDirectory()) {
+			var data = path.parse(path.join(dirPath))
+			if (filter.indexOf(data.ext.substr(1)) > -1) {
+				return [dirPath]
+			}
+			return []
 		}
-		return []
+
+		let filenames = []
+		for (let name of fs.readdirSync(dirPath)) {
+			let result = ls(path.join(dirPath, name), filter)
+			filenames.push(...result)
+		}
+
+		return filenames
 	}
 
-	let filenames = []
-	for (let name of fs.readdirSync(dirPath)) {
-		let result = ls(path.join(dirPath, name), filter)
-		filenames.push(...result)
-	}
+	let files = ls("./src/grpc/protos/", filter)
 
-	return filenames
-}
+	await files.map(file => {
+		var proto = grpc.load(file);
 
-let files = ls("./src/grpc/protos/", filter)
+		var fileData = path.parse(path.join(file))
 
-files.map(file => {
-	var proto = grpc.load(file);
-	var obj = []
+		let services = []
+		let messages = {}
+		Object.keys(proto).map((serviceName) => {
+			Object.keys(proto[serviceName]).map((key) => {
+				let service = { name: key, functions: [] }
 
-	var fileData = path.parse(path.join(file))
+				if (proto[serviceName][key].service) {
+					Object.keys(proto[serviceName][key].service).map((func) => {
 
-	let services = []
-	let messages = []
-	Object.keys(proto).map(async (serviceName) => {
-		Object.keys(proto[serviceName]).map(async (key) => {
-			if (proto[serviceName][key].service) {
-				let funciones = []
-				let response = []
+						if (proto[serviceName][key].service[func].responseType.children.length == 1) {
+							// retorno directamente un array o un objeto
+							let objName = proto[serviceName][key].service[func].responseType.children[0].resolvedType.name
+							let returnField = proto[serviceName][key].service[func].responseType.children[0].name
+							let repeated = proto[serviceName][key].service[func].responseType.children[0].repeated
+							let requestName = proto[serviceName][key].service[func].requestType.name
+							let cant = proto[serviceName][key].service[func].responseType.children.length
 
-				Object.keys(proto[serviceName][key].service).map(async (func) => {
-					let request = []
-					let requestName = proto[serviceName][key].service[func].requestType.name
+							let functions = processFunctions(serviceName, func, objName, cant, returnField, repeated, requestName, proto[serviceName][key].service[func].requestType, messages)
+							service.functions.push(functions)
 
-					if (proto[serviceName][key].service[func].requestType.children) {
-						Object.keys(proto[serviceName][key].service[func].requestType.children).map(async (child) => {
-							let name = proto[serviceName][key].service[func].requestType.children[child].name
-							let type = proto[serviceName][key].service[func].requestType.children[child].type
+							let mess = processMessage(objName, proto[serviceName][key].service[func].responseType.children, messages)
 
-							request.push({ name: name, type: type })
-						})
-					}
-					// ----------------
+						} else {
+							// retorno un objeto donde adentro va a tener un array o objeto con el resultado principal
+							Object.keys(proto[serviceName][key].service[func].responseType.children).map((child) => {
+								if (!proto[serviceName][key].service[func].responseStream) {
+									// resulvo solo si la respuesta no es un stream
+									let objName = proto[serviceName][key].service[func].responseType.children[child].resolvedType.name
+									let returnField = proto[serviceName][key].service[func].responseType.children[child].name
+									let repeated = proto[serviceName][key].service[func].responseType.children[child].repeated
 
-					if (proto[serviceName][key].service[func].responseType.children.length == 1) {
-						let returnField = proto[serviceName][key].service[func].responseType.children[0].name
-						let repeated = proto[serviceName][key].service[func].responseType.children[0].repeated
-						let objName = proto[serviceName][key].service[func].responseType.children[0].resolvedType.name
-
-						let mess = processMessage(objName, returnField, repeated, proto[serviceName][key].service[func].responseType.children)
-						obj[mess.name] = mess.values
-						services.push(mess)
-					}
-
-
-					/*
-					let responseName = proto[serviceName][key].service[func].responseType.name
-					Object.keys(proto[serviceName][key].service[func].responseType.children).map(async (child) => {
-						let fields = []
-
-						// nombre objeto con campos 
-						let nameField = proto[serviceName][key].service[func].responseType.children[child].name
-
-						if (!proto[serviceName][key].service[func].responseType.children[child].repeated && proto[serviceName][key].service[func].responseType.children[child].resolvedType != null) {
-							// crea en message los objetos 
-							let responseChild = { name: nameField, repeated: false, value: [] }
-							Object.keys(proto[serviceName][key].service[func].responseType.children[child].resolvedType.children).map(async (field) => {
-								let name = proto[serviceName][key].service[func].responseType.children[child].resolvedType.children[field].name
-								let type = proto[serviceName][key].service[func].responseType.children[child].resolvedType.children[field].type.name
-
-								responseChild.value.push({ name: name, type: type })
+									// devolver objeto response
+									// let functions = processFunctions(serviceName, func, objName, returnField, repeated)
+									// service.functions.push(functions)
+								}
 							})
-							messages.push(responseChild)
-
-						} else if (!proto[serviceName][key].service[func].responseType.children[child].repeated) {
-							// si el campo no es repeat 
-							let responseChild = { name: nameField, repeated: false, value: [] }
-
-							Object.keys(proto[serviceName][key].service[func].responseType.children[child].resolvedType.children).map(async (field) => {
-								let name = proto[serviceName][key].service[func].responseType.children[child].resolvedType.children[field].name
-								let type = proto[serviceName][key].service[func].responseType.children[child].resolvedType.children[field].type.name
-
-								responseChild.value.push({ name: name, type: type })
-							})
-
-							let name = proto[serviceName][key].service[func].responseType.resolvedType.children[field].name
-							let type = proto[serviceName][key].service[func].responseType.resolvedType.children[field].type.name
-
-							responseChild.value.push({ name: name, type: type })
-							// response.push(responseChild)
-							messages.push(responseChild)
-						} else if (proto[serviceName][key].service[func].responseType.children.length == 1) {
-							// nombre objeto con campos 
-							let objName = proto[serviceName][key].service[func].responseType.children[child].resolvedType.name
-
-							let responseChild = { nameRepeated: nameField, name: objName, repeated: true, value: [] }
-
-							Object.keys(proto[serviceName][key].service[func].responseType.children[child].resolvedType.children).map(async (field) => {
-								let name = proto[serviceName][key].service[func].responseType.children[child].resolvedType.children[field].name
-								let type = proto[serviceName][key].service[func].responseType.children[child].resolvedType.children[field].type.name
-
-								responseChild.value.push({ name: name, type: type })
-							})
-							response.push(responseChild)
-							messages.push(responseChild)
 						}
 					})
-					*/
-					// funciones.push({ name: func, requestName: requestName, requestValue: request, responseName: responseName, responseValue: response })
-				})
-				// services.push({ name: key, value: funciones })
-			}
-		})
-
-	});
-				
-
-	console.log(JSON.stringify(services, null, 2))
-
-
-	var entities = []
-	messages.map(async message => {
-		entities.push(`
-		const ${message.name} = new DomainEntity({
-			name: "${message.name}",
-			fields: () => ({
-			${
-			message.value.map(val =>
-				`
-				${val.name}: {
-					type: ${capitalize(val.type)}Type
+					services.push(service)
 				}
-				`
-			)
-			}
 			})
 		});
-	`)
-	})
 
-	var domain = []
-	services.map(async service => {
-		let name = service.name
+		// console.log(JSON.stringify(messages, null, 2))
+		// console.log(JSON.stringify(services, null, 2))
 
-		domain = `export default new DomainService({
-			name: "${name}",
+		var domain = []
+		services.map(service => {
+			domain = `export default new DomainService({
+			name: "${service.name}",
 			messages: messages,
 			services: services,
 			methods: {`
-
-		service.value.map(func => {
-			let strType
-
-			if (func.responseValue.length) {
-				strType = `type: new ListType(${func.responseValue[0].name})`
-			} else {
-				strType = `type: ${func.responseName}`
-			}
-			domain += `
+			service.functions.map(func => {
+				domain += `
 				${func.name}: {
 					name: "${func.name}",
-					${ func.responseValue[0] && func.responseValue[0].repeated ? 'returnField: "items",' : ''}
-					${strType},
-					methodType: METHOD_TYPES.QUERY,
-					args: {
-					${
-				func.requestValue.map(val =>
-					`	${val.name}: {
-							type: ${capitalize(val.type.name)}Type
-						}
-						`
-				)
-				}
+					${func.returnField ? func.returnField : ''}
+					${func.type}
+					${func.methodType}
+					${func.requestTypeName}
+					args: {${func.request.map(param => `
+							${param.name}: {
+								${param.type}
+							}`
+					)}
 					}
-				},
-		`
-		})
-
-		domain += `
+				},`
+			})
+			domain += `
 			}
 		})
 		`
-	})
-
-	var stream = fs.createWriteStream(`services/${fileData.name}Service.js`);
-	stream.once('open', function (fd) {
-		stream.write(`
-		import { DomainService,	METHOD_TYPES, DomainEntity,	IdType, StringType,	ListType, IntType, BooleanType } from "grpc-graphql-router-tools";
-
-		import services from "../${fileData.dir}/${fileData.name}_grpc_pb";
-		import messages from "../${fileData.dir}/${fileData.name}_pb";
-
-	  `);
-		entities.map(entity => {
-			stream.write(`${entity}`)
 		})
 
-		stream.write(`${domain}`)
+		var entities = []
+		Object.keys(messages).map(m => {
+			let message = messages[m]
+			entities.push(`
+			const ${message.name} = new DomainEntity({
+				name: "${message.name}",
+				fields: () => ({${
+				message.values.map(val => `
+							${val.name}: {
+								type: ${val.type}
+							}`
+				)}
+				})
+			});
+		`)
+		})
 
-		stream.end();
-	});
-})
-	
-function processMessage(objName, returnField, repeated, children) {
-	let values = []
-	children.map( childs => {
-		childs.resolvedType.children.map( child  => {
-			values.push({ 
-				name: child.name, 
-				type: child.type.name, 
-				resolvedType: child.resolvedType && child.resolvedType.name ? child.resolvedType.name : null 
+		var stream = fs.createWriteStream(`services/${fileData.name}Service.js`);
+		stream.once('open', function (fd) {
+			stream.write(`import { DomainService,	METHOD_TYPES, DomainEntity,	IdType, StringType,	ListType, IntType, BooleanType } from "grpc-graphql-router-tools";
+
+				import services from "../${fileData.dir}/${fileData.name}_grpc_pb";
+				import messages from "../${fileData.dir}/${fileData.name}_pb";
+
+			`);
+
+			entities.map(entity => {
+				stream.write(`${entity}`)
 			})
-		})
+
+			stream.write(`
+				${domain}`
+			)
+
+			stream.end();
+		});
 	})
 
-	let message = {}
-	message.name = objName
-	message.repeated = repeated
-	message.returnField = returnField 
-	message.values = values
+	function variableToGraph(grpType) {
+		switch (grpType) {
+			case "uint32":
+				return "int"
+				break;
+			default:
+				return grpType
+				break;
+		}
+	}
 
-	return message
-}
-	
+	function processFunctions(serviceName, funcName, objName, cant, returnField, repeated, requestName, request, messages) {
+		let message = {}
+
+		let reqValues = []
+		let reqName = request.name
+
+		request.children.map(r => {
+			if (r.resolvedType) {
+				processMessage(r.resolvedType.name, r.resolvedType.children, messages, false)
+
+				if (r.repeated) {
+					reqValues.push({ name: r.name, type: `type: new ListType(${capitalize(variableToGraph(r.resolvedType.name))})` })
+				} else {
+					reqValues.push({ name: r.name, type: `type: ${capitalize(variableToGraph(r.resolvedType.name))}` })
+				}
+			} else {
+				reqValues.push({ name: r.name, type: `type: ${capitalize(variableToGraph(r.type.name))}Type` })
+			}
+		})
+
+		message.name = funcName
+		message.type = repeated ? `type: new ListType(${objName}),` : `type: ${objName},`
+		// si tengo un solo campo returno este
+		message.returnField = cant == 1 ? `returnField: "${returnField}",` : false
+		message.methodType = `methodType: METHOD_TYPES.QUERY,`
+		message.requestTypeName = `requestTypeName: "${requestName}",`
+		if (reqValues) {
+			message.request = reqValues
+		}
+
+		return message
+	}
+
+	function processMessage(objName, children, messages, resolvedResponse = true) {
+		let values = []
+
+		children.map(childs => {
+			if (resolvedResponse) {
+				childs.resolvedType.children.map(child => {
+					values.push({
+						name: child.name,
+						type: child.resolvedType ? child.resolvedType.name : capitalize(variableToGraph(child.type.name)) + 'Type',
+					})
+					if (child.resolvedType && child.resolvedType.children) {
+						processMessage(child.resolvedType.name, child.resolvedType.children, messages, false)
+					}
+				})
+			} else {
+				values.push({
+					name: childs.name,
+					type: childs.resolvedType ? childs.resolvedType.name : capitalize(variableToGraph(childs.type.name)) + 'Type',
+				})
+				if (childs.resolvedType && childs.resolvedType.children) {
+					processMessage(childs.resolvedType.name, childs.resolvedType.children, messages, false)
+				}
+			}
+		})
+
+		let message = {}
+		message.name = objName
+		message.values = values
+
+		messages[objName] = message
+	}
+
+})();
+
+

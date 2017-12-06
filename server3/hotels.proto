@@ -12,12 +12,9 @@ message HotelsRequest {
 }
 
 message HotelRequest {
-	Range range = 1;
-}
-
-message Range {
 	uint32 from = 1;
 	uint32 to = 2;
+	//repeated Range more = 3; //no se puede ( solo repeat de un int)
 }
 
 message HotelsResponse {
