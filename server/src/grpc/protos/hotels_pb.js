@@ -64,7 +64,7 @@ proto.hotels.HotelsRequest.prototype.toObject = function(opt_includeInstance) {
  */
 proto.hotels.HotelsRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-
+    token: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -101,6 +101,10 @@ proto.hotels.HotelsRequest.deserializeBinaryFromReader = function(msg, reader) {
     }
     var field = reader.getFieldNumber();
     switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setToken(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -130,6 +134,28 @@ proto.hotels.HotelsRequest.prototype.serializeBinary = function() {
  */
 proto.hotels.HotelsRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getToken();
+  if (f.length > 0) {
+    writer.writeString(
+      1,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional string token = 1;
+ * @return {string}
+ */
+proto.hotels.HotelsRequest.prototype.getToken = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/** @param {string} value */
+proto.hotels.HotelsRequest.prototype.setToken = function(value) {
+  jspb.Message.setField(this, 1, value);
 };
 
 

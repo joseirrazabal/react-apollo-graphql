@@ -152,6 +152,9 @@ import capitalize from 'string-capitalize'
 			case "uint32":
 				return "int"
 				break;
+			case "int32":
+				return "int"
+				break;
 			default:
 				return grpType
 				break;
@@ -199,7 +202,7 @@ import capitalize from 'string-capitalize'
 				childs.resolvedType.children.map(child => {
 					values.push({
 						name: child.name,
-						type: child.resolvedType ? child.resolvedType.name : capitalize(variableToGraph(child.type.name)) + 'Type',
+						type: child.resolvedType ? (child.repeated ? 'new ListType(' : '') + child.resolvedType.name + (child.repeated ? ')' : '') : capitalize(variableToGraph(child.type.name)) + 'Type',
 					})
 					if (child.resolvedType && child.resolvedType.children) {
 						processMessage(child.resolvedType.name, child.resolvedType.children, messages, false)
@@ -208,7 +211,7 @@ import capitalize from 'string-capitalize'
 			} else {
 				values.push({
 					name: childs.name,
-					type: childs.resolvedType ? childs.resolvedType.name : capitalize(variableToGraph(childs.type.name)) + 'Type',
+					type: childs.resolvedType ? (childs.repeated ? 'new ListType(' : '') + childs.resolvedType.name + (childs.repeated ? ')' : '') : capitalize(variableToGraph(childs.type.name)) + 'Type',
 				})
 				if (childs.resolvedType && childs.resolvedType.children) {
 					processMessage(childs.resolvedType.name, childs.resolvedType.children, messages, false)

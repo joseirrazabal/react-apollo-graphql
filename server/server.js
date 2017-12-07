@@ -77,6 +77,10 @@ import { Tags, FORMAT_HTTP_HEADERS } from 'opentracing'
 				Hotels: {
 					ip: "localhost",
 					port:50052 
+				},
+				Fly: {
+					ip: "172.16.20.61",
+					port: 10000
 				}
 			})
 		};

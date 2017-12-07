@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package flys;
+
+service Flys {
+   rpc GetFly(FlyId) returns (GetAllFly) {}
+}
+
+message FlyId {
+   string nameOrigin = 1;
+   string nameDestiny = 2;
+}
+
+message GetAllFly {
+   repeated Flyobj flies = 1;
+}
+
+message Flyobj {
+   string name = 1;
+   string description = 2;
+   int32 flyNumber = 3;
+}

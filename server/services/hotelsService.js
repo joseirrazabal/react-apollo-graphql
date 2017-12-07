@@ -29,7 +29,7 @@ import { DomainService,	METHOD_TYPES, DomainEntity,	IdType, StringType,	ListType
 								type: StringType
 							},
 							rooms: {
-								type: Rooms
+								type: new ListType(Rooms)
 							}
 				})
 			});
@@ -46,6 +46,9 @@ import { DomainService,	METHOD_TYPES, DomainEntity,	IdType, StringType,	ListType
 					methodType: METHOD_TYPES.QUERY,
 					requestTypeName: "HotelsRequest",
 					args: {
+							token: {
+								type: StringType
+							}
 					}
 				},
 				getHotel: {

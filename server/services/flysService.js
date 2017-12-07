@@ -1,51 +1,43 @@
 import { DomainService, METHOD_TYPES, DomainEntity, IdType, StringType, ListType, IntType, BooleanType } from "grpc-graphql-router-tools";
 
-import services from "../src/grpc/protos/flyguide_grpc_pb";
-import messages from "../src/grpc/protos/flyguide_pb";
+import services from "../src/grpc/protos/flys_grpc_pb";
+import messages from "../src/grpc/protos/flys_pb";
 
-const fly_id = new DomainEntity({
-	name: "FlyId",
-	fields: () => ({
-		origin: {
-			type: StringType
-		},
-		destiny: {
-			type: StringType
-		}
-	})
-});
 
-const Fly = new DomainEntity({
-	name: "Fly",
+const Flyobj = new DomainEntity({
+	name: "Flyobj",
 	fields: () => ({
 		name: {
 			type: StringType
 		},
 		description: {
 			type: StringType
+		},
+		flyNumber: {
+			type: IntType
 		}
 	})
 });
 
 export default new DomainService({
-	name: "FlyGuide",
+	name: "Flys",
 	messages: messages,
 	services: services,
 	methods: {
 		getFly: {
 			name: "getFly",
 			returnField: "flies",
-			type: new ListType(Fly),
+			type: new ListType(Flyobj),
 			methodType: METHOD_TYPES.QUERY,
+			requestTypeName: "FlyId",
 			args: {
-				origin: {
+				nameOrigin: {
 					type: StringType
-				}, 
-				destiny: {
+				},
+				nameDestiny: {
 					type: StringType
 				}
 			}
 		},
-
 	}
 })
