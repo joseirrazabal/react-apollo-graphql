@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom'
-import {gql, graphql} from 'react-apollo';
-import Fly from './Fly';
+import React, { Component } from 'react';
+import { gql, graphql } from 'react-apollo';
 import AddChannel from './AddChannel';
+import Fly from './Fly';
+import Streaming from './streaming'
 
 const channelsSubscription = gql`
     subscription channelAdded {
@@ -17,7 +17,7 @@ class ChannelsList extends Component {
 	componentWillMount() {
 		this.props.data.subscribeToMore({
 			document: channelsSubscription,
-			updateQuery: (prev, {subscriptionData}) => {
+			updateQuery: (prev, { subscriptionData }) => {
 				if (!subscriptionData.data) {
 					return prev;
 				}
@@ -36,7 +36,7 @@ class ChannelsList extends Component {
 	}
 
 	render() {
-		const {data: {loading, error, channelsa}} = this.props;
+		const { data: { loading, error, channelsa } } = this.props;
 
 		if (loading) {
 			return <p>Loading ...</p>;
@@ -50,17 +50,20 @@ class ChannelsList extends Component {
 				<div className="floating-box">
 					<div className="channelsList">
 						<AddChannel />
-						{ channelsa && channelsa.map(ch =>
+						{channelsa && channelsa.map(ch =>
 							(<div key={ch.id} className={'channel ' + (ch.id < 0 ? 'optimistic' : '')}>
-								<Link to={ch.id < 0 ? `/` : `channel/${ch.id}`}>
-									{ch.name}
-								</Link>
+								{ch.name}
 							</div>)
 						)}
 					</div>
 				</div>
+
 				<div className="floating-box">
-					<Fly/>
+					<Fly />
+				</div>
+
+				<div className="floating-box">
+					<Streaming />
 				</div>
 			</div>
 		);
@@ -78,6 +81,6 @@ export const channelsListQuery = gql`
 
 export default (graphql(channelsListQuery, {
 	options: (props) => ({
-		variables: {input: { token: "prueba" }},
+		variables: { input: { token: "prueba" } },
 	}),
 })(ChannelsList));
