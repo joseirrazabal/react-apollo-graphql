@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import grpc from 'grpc'
 import capitalize from 'string-capitalize'
+import { exec } from 'child_process';
 
 (async () => {
 
@@ -30,6 +31,9 @@ import capitalize from 'string-capitalize'
 	let files = ls("./src/grpc/protos/", filter)
 
 	await files.map(file => {
+
+		exec(`grpc_tools_node_protoc --js_out=import_style=commonjs,binary:. --grpc_out=. ${file}`)
+
 		var proto = grpc.load(file);
 
 		var fileData = path.parse(path.join(file))

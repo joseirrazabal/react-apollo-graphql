@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package flyguide;
+
+service FlyGuide {
+   rpc GetFly(FlyId) returns ( GetAllFly) {}
+}
+
+message FlyId {
+   string nameOrigin = 1;
+   string nameDestiny = 2;
+}
+
+message GetAllFly {
+   repeated Fly flies = 1;
+}
+
+message Fly {
+   FlyId flyId = 1;
+   string name = 2;
+   string description = 3;
+   int32 flyNumber = 4;
+}

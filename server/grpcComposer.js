@@ -1,8 +1,8 @@
 import { DomainCompose } from "grpc-graphql-router-tools";
 
-import ChannelService from "./services/ChannelService";
+import ChannelService from "./services/channelService";
 import HotelsService from "./services/hotelsService";
-import FlyService from "./services/flysService";
+import FlyService from "./services/flyGuideService";
 
 export default new DomainCompose({
 	domainServices: {
@@ -12,7 +12,8 @@ export default new DomainCompose({
 		Hotels: {
 			type: HotelsService
 		},
-		Fly: {
+		// nombre del servicio en el proto
+		FlyGuide: {
 			type: FlyService
 		}
 	}

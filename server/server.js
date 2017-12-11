@@ -78,7 +78,7 @@ import { Tags, FORMAT_HTTP_HEADERS } from 'opentracing'
 					ip: "localhost",
 					port:50052 
 				},
-				Fly: {
+				FlyGuide: {
 					ip: "172.16.20.61",
 					port: 10000
 				}
