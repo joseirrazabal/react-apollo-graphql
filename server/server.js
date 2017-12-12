@@ -15,6 +15,8 @@ import grpcCompose from "./grpcComposer";
 import initTracer from './tracer'
 import { Tags, FORMAT_HTTP_HEADERS } from 'opentracing'
 
+import { ChannelService } from './src/grpc'
+
 // creamos una función asíncrona autoejecutable para poder usar Async/Await
 (async () => {
 	dotenv.config()
@@ -85,6 +87,24 @@ import { Tags, FORMAT_HTTP_HEADERS } from 'opentracing'
 			})
 		};
 	}));
+
+
+	// stream al cliente
+	app.use('/stream' , bodyParser.json() , (req, res, next)=> {
+		res.writeHead(200, {
+			'Content-Type': 'text/event-stream',
+			'Cache-Control': 'no-cache',
+			'Connection': 'keep-alive'
+		});
+
+		var call = ChannelService.prueba()
+
+		call.on('data', function (item) {
+			res.write("data: " + JSON.stringify(item) + "\n\n");
+		});
+		// call.on('end', function() {
+		// })
+	})
 
 	// si no estamos en producción
 	if (process.env.NODE_ENV !== 'production') {
