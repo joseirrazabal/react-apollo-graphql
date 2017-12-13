@@ -50,6 +50,7 @@
 	channel(name: String!): Channel
 	getUser(id: ID!): User 
 	getRole(id: ID!): Role
+	loggedInUser: User
   }
   
   # The mutation root type, used to define all mutations

@@ -4,6 +4,7 @@ import pubsub from '../pubsub'
 import connector from './connectors'
 import { User, Channel } from './db/models'
 import { ChannelService } from './grpc'
+import { Error } from 'mongoose';
 
 const resolvers = {
 	Query: {
@@ -34,6 +35,13 @@ const resolvers = {
 		getRole: (root, { id }) => {
 			return User.findOne({ id }).then((response) => response);
 		},
+		loggedInUser: (_, args, { token }) => {
+			// const { id } = token
+			// if (!id) {
+			// 	return Error("Sin token")
+			// }
+			return User.findOne({}).then((response) => response);
+		}
 	},
 	Mutation: {
 		addChannel: (root, args) => {

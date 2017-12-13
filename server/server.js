@@ -27,7 +27,7 @@ import { ChannelService } from './src/grpc'
 	db.once('open', () => console.log('We are connected!'));
 
 	const tracer = initTracer('Server01');
-	
+
 	// creamos una aplicación de express y un servidor HTTP apartir de esta
 	const app = express();
 	const server = createServer(app);
@@ -70,27 +70,29 @@ import { ChannelService } from './src/grpc'
 
 		return {
 			schema: schema,
-			context: grpcCompose.createContext({
-				token: req.get("token"),
-				Channel: {
-					ip: "localhost",
-					port: 50051
-				},
-				Hotels: {
-					ip: "localhost",
-					port:50052 
-				},
-				FlyGuide: {
-					ip: "172.16.20.61",
-					port: 10000
-				}
-			})
+			context: {
+				token: req.headers.authorization || null,
+				...grpcCompose.createContext({
+					Channel: {
+						ip: "localhost",
+						port: 50051
+					},
+					Hotels: {
+						ip: "localhost",
+						port: 50052
+					},
+					FlyGuide: {
+						ip: "172.16.20.61",
+						port: 10000
+					}
+				})
+			}
 		};
 	}));
 
 
 	// stream al cliente
-	app.use('/stream' , bodyParser.json() , (req, res, next)=> {
+	app.use('/stream', bodyParser.json(), (req, res, next) => {
 		res.writeHead(200, {
 			'Content-Type': 'text/event-stream',
 			'Cache-Control': 'no-cache',
