@@ -40,7 +40,10 @@ const resolvers = {
 			// if (!id) {
 			// 	return Error("Sin token")
 			// }
-			return User.findOne({}).then((response) => response);
+			if (token) {
+				return User.findOne({}).then((response) => response);
+			}
+			return {}
 		}
 	},
 	Mutation: {
