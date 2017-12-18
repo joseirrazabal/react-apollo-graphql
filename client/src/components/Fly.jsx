@@ -40,8 +40,11 @@ class Fly extends Component {
 					{getFly && getFly.map((fly, key) => {
 						return (
 							<div key={key} className="in-box">
-								<h4>VUELO ID - {fly.fly_number}</h4>
+								<h4>VUELO ID - {fly.flyNumber}</h4>
 								<p> Nombre: {fly.name}</p>
+								<p> Description: {fly.description}</p>
+								<p> Origen : {fly.flyId.nameOrigin}</p>
+								<p> Destino: {fly.flyId.nameDestiny}</p>
 							</div>
 						)
 					})}
@@ -55,6 +58,12 @@ export const flyListQuery = gql`
     query FlyListQuery($search: GetFlyInput) {
         getFly(params : $search) {
             name
+			description
+			flyNumber
+            flyId {
+                nameOrigin
+                nameDestiny
+            }
         }
     }
 `;

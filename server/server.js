@@ -82,7 +82,7 @@ import { ChannelService } from './src/grpc'
 						port: 50052
 					},
 					FlyGuide: {
-						ip: "172.16.20.61",
+						ip: "localhost",
 						port: 10000
 					}
 				})

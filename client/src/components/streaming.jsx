@@ -4,7 +4,7 @@ var jsonData = []
 export default class Streaming extends Component {
 
 	componentDidMount() {
-		var source = new EventSource("http://localhost:4000/stream");
+		var source = new EventSource("http://0.0.0.0:4000/stream");
 
 		source.onmessage = (event) => {
 			console.log("Event --> " , event)
