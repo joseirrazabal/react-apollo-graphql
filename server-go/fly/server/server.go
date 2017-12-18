@@ -6,29 +6,27 @@ channels and function types, representing an uninitialized value.
 
 import (
 	"flag"
-	//  "time"
 
-	// "golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"github.com/golang/protobuf/proto"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/testdata"
 
-	pb "../fly_guide"
+	pb "fly_guide"
 
 	"net"
 	"fmt"
 	"log"
 	"io/ioutil"
 	"encoding/json"
-	"context"
+	"golang.org/x/net/context"
 )
 
 var (
 	tls        = flag.Bool("tls", false, "Connection uses TLS if true, else plain TCP")
 	certFile   = flag.String("cert_file", "", "The TLS cert file")
 	keyFile    = flag.String("key_file", "", "The TLS key file")
-	jsonDBFile = flag.String("json_db_file", "mockdata/route_fly_db.json", "A json file containing a list of FLY")
+	jsonDBFile = flag.String("json_db_file", "route_fly_db.json", "A json file containing a list of FLY")
 	port       = flag.Int("port", 10000, "The server port")
 )
 
@@ -38,10 +36,11 @@ type flyServer struct {
 
 func (flyServer *flyServer) GetFly(ctx context.Context, flyElements *pb.FlyId) (*pb.GetAllFly , error){
 	flies := []*pb.Fly{};
+	fmt.Println("INIT Server FLY")
 	// flyServer.savedFly --> Es el array del json entero.
 	for _, fly := range flyServer.savedFly {
 		if proto.Equal(fly.FlyId , flyElements) {
-			fmt.Println("flyElements --> " , fly)
+			fmt.Println("flyElements --> " , *fly)
 			flies = append(flies, fly)
 
 			//time.Sleep(time.Second * 3)
@@ -73,6 +72,8 @@ func (flyServer *flyServer) GetFly(ctx context.Context, flyElements *pb.FlyId) (
 
 // loadFlies: --> carga Flies simulando DDBB.
 func (flyServer *flyServer) loadFlies(filePath string) {
+	// ver file path para tener en cuenta el archivo y su ruta.
+	fmt.Println("dirección archivo --> " , filePath)
 	file, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		log.Fatalf("Failed to load default FLIES: %v", err)
@@ -90,7 +91,7 @@ func newServer() *flyServer {
 
 func main() {
 	//flag.Parse()
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", *port))
+	lis, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%d", *port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
