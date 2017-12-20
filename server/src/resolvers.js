@@ -2,7 +2,7 @@ import { withFilter } from 'graphql-subscriptions';
 import pubsub from '../pubsub'
 
 import connector from './connectors'
-import { User, Channel } from './db/models'
+import { User, Channel, MenuItem } from './db/models'
 import { ChannelService } from './grpc'
 import { Error } from 'mongoose';
 
@@ -44,6 +44,9 @@ const resolvers = {
 				return User.findOne({}).then((response) => response);
 			}
 			return {}
+		},
+		getAllMenuItem: (_, args, { token }) => {
+			return MenuItem.find({}).then((response) => response);
 		}
 	},
 	Mutation: {
@@ -105,6 +108,11 @@ const resolvers = {
 
 					throw new Error(err);
 				});
+		},
+		setMenuItem: (root, args) => {
+			const newMenuItem = new MenuItem(args);
+
+			return newMenuItem.save().then((response) => response);
 		}
 	},
 	Subscription: {

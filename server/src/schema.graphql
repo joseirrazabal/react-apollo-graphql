@@ -1,3 +1,10 @@
+type MenuItem {
+	id: ID!
+	title: String!
+	route: String
+	order: Int
+}
+
   type Channel {
 	id: ID!
 	name: String
@@ -51,6 +58,7 @@
 	getUser(id: ID!): User 
 	getRole(id: ID!): Role
 	loggedInUser: User
+	getAllMenuItem: [MenuItem]
   }
   
   # The mutation root type, used to define all mutations
@@ -58,6 +66,7 @@
 	addChannel(name: String!): Channel
 	addMessage(message: MessageInput!): Message
 	logUser(email: String!, password: String!): Auth
+	setMenuItem(title: String!, route: String, order: Int): MenuItem
   }
   
   # The subscription root type, specifying what we can subscribe to

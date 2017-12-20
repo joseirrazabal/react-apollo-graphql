@@ -21,6 +21,7 @@ import { ChannelService } from './src/grpc'
 (async () => {
 	dotenv.config()
 
+	mongoose.Promise = global.Promise;
 	mongoose.connect(`mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`, { useMongoClient: true });
 	const db = mongoose.connection;
 	db.on('error', console.error.bind(console, 'Connection error:'));
@@ -82,7 +83,7 @@ import { ChannelService } from './src/grpc'
 						port: 50052
 					},
 					FlyGuide: {
-						ip: "172.16.20.61",
+						ip: "localhost",
 						port: 10000
 					}
 				})
