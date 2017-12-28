@@ -7,6 +7,7 @@ import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { SubscriptionManager } from 'graphql-subscriptions';
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
+import expressPlayground from 'graphql-playground-middleware-express'
 
 import { schema, LocalSchema } from './src';
 import pubsub from './pubsub'
@@ -113,10 +114,15 @@ import { ChannelService } from './src/grpc'
 	if (process.env.NODE_ENV !== 'production') {
 		// usamos el middleware `graphiqlExpress` para crear la URL `/ide` donde cargamos GraphiQL
 		// este IDE va a consumir datos de la URL `/graphql` que creamos antes y `/subscriptions`
-		app.use('/ide', graphiqlExpress({
-			endpointURL: '/graphql',
+		// app.use('/ide', graphiqlExpress({
+		// 	endpointURL: '/graphql',
+		// 	subscriptionsEndpoint: `ws://${process.env.SERVER_HOST}:${process.env.SERVER_PORT}/subscriptions`,
+		// }));
+
+		app.get('/ide', expressPlayground({ 
+			endpoint: '/graphql',
 			subscriptionsEndpoint: `ws://${process.env.SERVER_HOST}:${process.env.SERVER_PORT}/subscriptions`,
-		}));
+		}))
 	}
 
 	// iniciamos el servidor en el puerto y host que obtuvimos por variables de entorno

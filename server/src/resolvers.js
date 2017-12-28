@@ -5,32 +5,35 @@ import connector from './connectors'
 import { User, Channel, MenuItem } from './db/models'
 import { ChannelService } from './grpc'
 import { Error } from 'mongoose';
+import getProjection from './projection';
 
 const resolvers = {
 	Query: {
-		channelsa: (root, { params } ) => {
+		channelsa: (root, { params }) => {
 			// return (await ChannelService.getAllAsync({ token: params.token })).items || []
 
 			return new Promise((resolve, reject) => {
 				var result = []
 
-				var call = ChannelService.prueba({ token: params && params.token || ''})
-				call.on('data', function(item) {
+				var call = ChannelService.prueba({ token: params && params.token || '' })
+				call.on('data', function (item) {
 					result.push(item)
 					// pubsub.publish({ 'channel': 'channelAdded', channelAdded: item });
 				});
-				call.on('end', function() {
+				call.on('end', function () {
 					return resolve(result)
 				})
 			})
-		
+
 			// return Channel.find({}).then((response) => { return response });
 		},
 		channel: (root, { name }) => {
 			return Channel.findOne({ name }).then((response) => response);
 		},
-		getUser: (root, { id }) => {
-			return User.findOne({ id }).then((response) => response);
+		getUser: (root, { id }, options, context) => {
+			let projection = getProjection(context.fieldNodes[0])
+
+			return User.findById(id).select(projection).exec();
 		},
 		getRole: (root, { id }) => {
 			return User.findOne({ id }).then((response) => response);
@@ -41,28 +44,29 @@ const resolvers = {
 			// 	return Error("Sin token")
 			// }
 			if (token) {
-				return User.findOne({}).then((response) => response);
+				return User.findById("5a0a0f23491dc4c84cf310e1").exec();
 			}
 			return {}
 		},
-		getAllMenuItem: (_, args, { token }) => {
-			return MenuItem.find({}).then((response) => response);
+		getAllMenuItem: (_, args, { token }, context) => {
+			let projection = getProjection(context.fieldNodes[0])
+
+			return MenuItem.find().select(projection).sort("order").exec();
 		}
 	},
 	Mutation: {
-		addChannel: (root, args) => {
-			// const newChannel = { id: String(nextId++), messages: [], name: args.name };
-			// channels.push(newChannel);
-			const newChannel = new Channel(args);
+		addChannel: async (root, args) => {
+			const ChannelModel = new Channel(args);
+			const newChannel = await ChannelModel.save();
 
-			// pubsub.publish('channelAdded', { channelAdded: { id: newChannel._id, name: newChannel.name } } );
+			if (!newChannel) {
+				throw new Error('Error adding new channel');
+			}
 
-			// kafka
+			// kafka (subscription)
 			pubsub.publish({ 'channel': 'channelAdded', channelAdded: { id: newChannel._id, name: newChannel.name } });
 
-			return newChannel.save().then((response) => response);
-			// channels.push(newChannel);
-			// return newChannel;
+			return newChannel
 		},
 		addMessage: (root, { message }) => {
 			const channel = channels.find(channel => channel.id === message.channelId);
