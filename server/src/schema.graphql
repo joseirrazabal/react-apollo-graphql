@@ -5,6 +5,7 @@ type MenuItem {
 	url: String
 	order: Int
 	icon: String
+	credential: Int
 }
 
   type Channel {
@@ -68,13 +69,13 @@ type MenuItem {
 	addChannel(name: String!): Channel
 	addMessage(message: MessageInput!): Message
 	logUser(email: String!, password: String!): Auth
-	setMenuItem(name: String!, title: Boolean, url: String, order: Int, icon: String): MenuItem
+	setMenuItem(name: String!, title: Boolean, url: String, order: Int, icon: String, credential: Int): MenuItem
   }
   
   # The subscription root type, specifying what we can subscribe to
   type Subscription {
 	channelAdded: Channel
-	messageAdded(channelId: ID!): Message
+	menuItemAdded(credential: Int!): MenuItem
   }
 
 # schema {

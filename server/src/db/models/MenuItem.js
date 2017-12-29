@@ -9,6 +9,7 @@ const schema = new Schema({
 	url: String,
 	order: Number,
 	icon: String,
+	credential: Number,
 })
 
 export default mongoose.model('MenuItem', schema)

@@ -6,6 +6,7 @@ import { User, Channel, MenuItem } from './db/models'
 import { ChannelService } from './grpc'
 import { Error } from 'mongoose';
 import getProjection from './projection';
+import newObj from './newObj'
 
 const resolvers = {
 	Query: {
@@ -56,32 +57,12 @@ const resolvers = {
 	},
 	Mutation: {
 		addChannel: async (root, args) => {
-			const ChannelModel = new Channel(args);
-			const newChannel = await ChannelModel.save();
-
-			if (!newChannel) {
-				throw new Error('Error adding new channel');
-			}
-
-			// kafka (subscription)
-			pubsub.publish({ 'channel': 'channelAdded', channelAdded: { id: newChannel._id, name: newChannel.name } });
-
-			return newChannel
+			return newObj(Channel, args, 'channelAdded')
 		},
-		addMessage: (root, { message }) => {
-			const channel = channels.find(channel => channel.id === message.channelId);
-			if (!channel)
-				throw new Error("Channel does not exist");
-
-			// const newMessage = { id: String(nextMessageId++), text: message.text };
-			// channel.messages.push(newMessage);
-
-			// pubsub.publish('messageAdded', { messageAdded: newMessage, channelId: message.channelId });
-
-			// return newMessage;
+		setMenuItem: async (_, args, context) => {
+			return newObj(MenuItem, args, 'menuItemAdded')
 		},
 		logUser(root, args) {
-			console.log("bien")
 			const errors = [];
 
 			return connector.Auth.signIn(args)
@@ -113,26 +94,16 @@ const resolvers = {
 					throw new Error(err);
 				});
 		},
-		setMenuItem: (root, args) => {
-			const newMenuItem = new MenuItem(args);
-
-			return newMenuItem.save().then((response) => response);
-		}
 	},
 	Subscription: {
 		channelAdded: {
 			subscribe: () => pubsub.asyncIterator('channelAdded')
-			// subscribe: withFilter(() => pubsub.asyncIterator('channelAdded'), (payload, variables) => {
-			// return payload.name === variables.name;
-			// return payload;
 		},
-		messageAdded: {
-			subscribe: withFilter(() => pubsub.asyncIterator('messageAdded'), (payload, variables) => {
-				// The `messageAdded` channel includes events for all channels, so we filter to only
-				// pass through events for the channel specified in the query
-				return payload.channelId === variables.channelId;
+		menuItemAdded: {
+			subscribe: withFilter(() => pubsub.asyncIterator('menuItemAdded'), (payload, variables) => {
+				return payload.credential === variables.credential;
 			}),
-		}
+		},
 	},
 };
 
