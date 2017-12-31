@@ -9,11 +9,13 @@ export default async function(Obj, args, channel) {
 	}
 
 	if (channel) {
+		const { _id, __v, ...rest } = newObj._doc
+
 		let objSub = {}
 		objSub['channel'] = channel
-		objSub[channel] = { newObj }
+		objSub[channel] = { id: newObj._id, ...rest }
 
-		pubsub.publish({ objSub  });
+		pubsub.publish(objSub);
 	}
 
 	return newObj

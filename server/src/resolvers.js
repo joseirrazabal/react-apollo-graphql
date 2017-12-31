@@ -1,4 +1,5 @@
 import { withFilter } from 'graphql-subscriptions';
+import jwtDecode from 'jwt-decode'
 import pubsub from '../pubsub'
 
 import connector from './connectors'
@@ -39,13 +40,10 @@ const resolvers = {
 		getRole: (root, { id }) => {
 			return User.findOne({ id }).then((response) => response);
 		},
-		loggedInUser: (_, args, { token }) => {
-			// const { id } = token
-			// if (!id) {
-			// 	return Error("Sin token")
-			// }
-			if (token) {
-				return User.findById("5a0a0f23491dc4c84cf310e1").exec();
+		loggedInUser: async (_, args, { token }) => {
+			const { id } = token && jwtDecode(token) || false
+			if (id) {
+				return User.findById(id).exec();
 			}
 			return {}
 		},
@@ -58,6 +56,15 @@ const resolvers = {
 	Mutation: {
 		addChannel: async (root, args) => {
 			return newObj(Channel, args, 'channelAdded')
+
+			// const newChannel = new Channel(args);
+
+			// pubsub.publish('channelAdded', { channelAdded: { id: newChannel._id, name: newChannel.name } } );
+
+			// kafka
+			// pubsub.publish({ 'channel': 'channelAdded', channelAdded: { id: newChannel._id, name: newChannel.name } });
+
+			// return newChannel.save().then((response) => response);
 		},
 		setMenuItem: async (_, args, context) => {
 			return newObj(MenuItem, args, 'menuItemAdded')

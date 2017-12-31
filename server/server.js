@@ -60,7 +60,6 @@ import { ChannelService } from './src/grpc'
 	// usando el esquema ejecutable que creamos
 	// app.use('/graphql', bodyParser.json(), graphqlExpress( (req) => { return { schema: LocalSchema } })) 
 	app.use('/graphql', bodyParser.json(), graphqlExpress((req) => {
-		console.log(req.headers.authorization)
 		const parentSpanContext = tracer.extract(FORMAT_HTTP_HEADERS, req.headers)
 		const span = tracer.startSpan('graph', { childOf: parentSpanContext, tags: { [Tags.SPAN_KIND]: Tags.SPAN_KIND_RPC_SERVER } });
 		span.log({
