@@ -107,9 +107,10 @@ const resolvers = {
 			subscribe: () => pubsub.asyncIterator('channelAdded')
 		},
 		menuItemAdded: {
-			subscribe: withFilter(() => pubsub.asyncIterator('menuItemAdded'), (payload, variables) => {
-				return payload.credential === variables.credential;
-			}),
+			subscribe: () => pubsub.asyncIterator('menuItemAdded')
+			// subscribe: withFilter(() => pubsub.asyncIterator('menuItemAdded'), (payload, variables) => {
+			// 	return payload.credential === variables.credential;
+			// }),
 		},
 	},
 };

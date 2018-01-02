@@ -75,7 +75,8 @@ type MenuItem {
   # The subscription root type, specifying what we can subscribe to
   type Subscription {
 	channelAdded: Channel
-	menuItemAdded(credential: Int!): MenuItem
+	# menuItemAdded(credential: Int!): MenuItem
+	menuItemAdded: MenuItem
   }
 
 # schema {

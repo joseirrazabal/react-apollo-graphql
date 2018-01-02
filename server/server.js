@@ -114,12 +114,12 @@ import { ChannelService } from './src/grpc'
 	if (process.env.NODE_ENV !== 'production') {
 		// usamos el middleware `graphiqlExpress` para crear la URL `/ide` donde cargamos GraphiQL
 		// este IDE va a consumir datos de la URL `/graphql` que creamos antes y `/subscriptions`
-		// app.use('/ide', graphiqlExpress({
-		// 	endpointURL: '/graphql',
-		// 	subscriptionsEndpoint: `ws://${process.env.SERVER_HOST}:${process.env.SERVER_PORT}/subscriptions`,
-		// }));
+		app.use('/ide', graphiqlExpress({
+			endpointURL: '/graphql',
+			subscriptionsEndpoint: `ws://${process.env.SERVER_HOST}:${process.env.SERVER_PORT}/subscriptions`,
+		}));
 
-		app.get('/ide', expressPlayground({ 
+		app.get('/ide2', expressPlayground({ 
 			endpoint: '/graphql',
 			subscriptionsEndpoint: `ws://${process.env.SERVER_HOST}:${process.env.SERVER_PORT}/subscriptions`,
 		}))
