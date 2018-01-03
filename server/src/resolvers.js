@@ -33,9 +33,17 @@ const resolvers = {
 			return Channel.findOne({ name }).then((response) => response);
 		},
 		getUser: (root, { id }, options, context) => {
-			let projection = getProjection(context.fieldNodes[0])
+			let user = {}
+			user.username = "usuario2"
+			user.id = "1"
+			user.username = "user"
+			user.createdAt = Date()
+			user.modifiedAt = Date()
+			user.lastLogin = Date()
+			return user
 
-			return User.findById(id).select(projection).exec();
+			// let projection = getProjection(context.fieldNodes[0])
+			// return User.findById(id).select(projection).exec();
 		},
 		getRole: (root, { id }) => {
 			return User.findOne({ id }).then((response) => response);
