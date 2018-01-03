@@ -1,0 +1,10 @@
+query {
+  postList {
+    posts {
+      id
+      title
+      body
+      userId
+    }
+  }
+}
