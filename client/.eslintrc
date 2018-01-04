@@ -1,6 +1,7 @@
 {
   "parser": "babel-eslint",
-  "extends": "airbnb",
+//   "extends": "airbnb",
+  "extends": "prettier",
   "env": {
     "browser": true,
     "es6": true,
@@ -14,6 +15,7 @@
       "defaultParams": true
     }
   },
+  "plugins": ["prettier"],
   "rules": {
     // A jsx extension is not required for files containing jsx
     "react/jsx-filename-extension": 0,
@@ -24,7 +26,6 @@
     // there are errors every line.
     "linebreak-style": 0,
     "jsx-a11y/href-no-hash": 0,
-    "semi": ["error", "never"],
-    "indent": ["error", 4]
+    "prettier/prettier": "error"
   }
 }
