@@ -5,16 +5,20 @@
  * in an offline session.
  */
 
-import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
+import React from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
 
-import HTML from '../../../shared/components/HTML';
+import HTML from '../../../shared/components/HTML'
 
 module.exports = function generate(context) {
-  // const config = context.htmlWebpackPlugin.options.custom.config;
-  const ClientConfig = context.htmlWebpackPlugin.options.custom.ClientConfig;
-  const html = renderToStaticMarkup(
-    <HTML bodyElements={<ClientConfig nonce="OFFLINE_PAGE_NONCE_PLACEHOLDER" />} />,
-  );
-  return `<!DOCTYPE html>${html}`;
-};
+    // const config = context.htmlWebpackPlugin.options.custom.config;
+    const ClientConfig = context.htmlWebpackPlugin.options.custom.ClientConfig
+    const html = renderToStaticMarkup(
+        <HTML
+            bodyElements={
+                <ClientConfig nonce="OFFLINE_PAGE_NONCE_PLACEHOLDER" />
+            }
+        />
+    )
+    return `<!DOCTYPE html>${html}`
+}

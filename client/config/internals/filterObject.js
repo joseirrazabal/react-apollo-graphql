@@ -1,20 +1,24 @@
 function filterObjectLoop(obj, filters, basePropPath = '') {
-  return Object.keys(filters).reduce((acc, key) => {
-    const propPath = basePropPath !== '' ? `${basePropPath}.${key}` : key;
+    return Object.keys(filters).reduce((acc, key) => {
+        const propPath = basePropPath !== '' ? `${basePropPath}.${key}` : key
 
-    if (typeof filters[key] === 'object') {
-      if (typeof obj[key] !== 'object') {
-        throw new Error(`Expected prop at path "${propPath}" to be an object`);
-      }
-      acc[key] = filterObjectLoop(obj[key], filters[key], propPath); // eslint-disable-line no-param-reassign,max-len
-    } else if (filters[key]) {
-      if (typeof obj[key] === 'undefined') {
-        throw new Error(`Filter set an "allow" on path "${propPath}", however, this path was not found on the source object.`);
-      }
-      acc[key] = obj[key]; // eslint-disable-line no-param-reassign
-    }
-    return acc;
-  }, {});
+        if (typeof filters[key] === 'object') {
+            if (typeof obj[key] !== 'object') {
+                throw new Error(
+                    `Expected prop at path "${propPath}" to be an object`
+                )
+            }
+            acc[key] = filterObjectLoop(obj[key], filters[key], propPath) // eslint-disable-line no-param-reassign,max-len
+        } else if (filters[key]) {
+            if (typeof obj[key] === 'undefined') {
+                throw new Error(
+                    `Filter set an "allow" on path "${propPath}", however, this path was not found on the source object.`
+                )
+            }
+            acc[key] = obj[key] // eslint-disable-line no-param-reassign
+        }
+        return acc
+    }, {})
 }
 
 // Applies a given set of filters to filter a given object's structure.
@@ -45,5 +49,5 @@ function filterObjectLoop(obj, filters, basePropPath = '') {
 //     poop: { plop: 'splash' }
 //   },
 export default function filterObject(obj, filters) {
-  return filterObjectLoop(obj, filters);
+    return filterObjectLoop(obj, filters)
 }

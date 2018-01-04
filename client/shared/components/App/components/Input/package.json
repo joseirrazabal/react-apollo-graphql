@@ -1,6 +1,6 @@
 {
-  "name": "Input",
-  "version": "0.0.0",
-  "private": true,
-  "main": "./Input.js"
+    "name": "Input",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./Input.js"
 }

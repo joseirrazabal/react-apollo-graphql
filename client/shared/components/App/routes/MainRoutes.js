@@ -1,30 +1,27 @@
 // @flow weak
 
-import React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
-import {
-  ConnectedLogin,
-  ConnectedHome,
-} from '../containers';
+import React from 'react'
+import { Route, Switch, Redirect } from 'react-router-dom'
+import { ConnectedLogin, ConnectedHome } from '../containers'
 
-import PrivateRoute from '../components/privateRoute';
-import LogoutRoute from '../components/logoutRoute';
+import PrivateRoute from '../components/privateRoute'
+import LogoutRoute from '../components/logoutRoute'
 
-import { PageNotFound } from '../views';
+import { PageNotFound } from '../views'
 
 export const MainRoutes = () => (
-  <Switch>
-    <LogoutRoute path="/logout" />
+    <Switch>
+        <LogoutRoute path="/logout" />
 
-    <Route path="/login" component={ConnectedLogin} />
-    <Route path="/register" component={ConnectedLogin} />
+        <Route path="/login" component={ConnectedLogin} />
+        <Route path="/register" component={ConnectedLogin} />
 
-    { /* <Route exact path="/" component={ConnectedHome} /> */ }
-    <Redirect exact from="/" to="/dashboard" />
-    <PrivateRoute path="/dashboard" component={ConnectedHome} />
+        {/* <Route exact path="/" component={ConnectedHome} /> */}
+        <Redirect exact from="/" to="/dashboard" />
+        <PrivateRoute path="/dashboard" component={ConnectedHome} />
 
-    <Route path="*" component={PageNotFound} />
-  </Switch>
-);
+        <Route path="*" component={PageNotFound} />
+    </Switch>
+)
 
-export default MainRoutes;
+export default MainRoutes

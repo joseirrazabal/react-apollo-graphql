@@ -1,5 +1,6 @@
-import { asyncComponent } from 'react-async-component';
+import { asyncComponent } from 'react-async-component'
 
 export default asyncComponent({
-  resolve: () => System.import(/* webpackChunkName: "private" */ './PrivateRoute'),
-});
+    resolve: () =>
+        System.import(/* webpackChunkName: "private" */ './PrivateRoute')
+})

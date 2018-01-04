@@ -1,65 +1,58 @@
 // @flow weak
 
-import React, {
-  PureComponent,
-} from 'react';
-import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
-import cx from 'classnames';
-import { Link } from 'react-router-dom';
+import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types'
+import Helmet from 'react-helmet'
+import cx from 'classnames'
+import { Link } from 'react-router-dom'
 
 class Home extends PureComponent {
-  static propTypes = {
-    // react-router 4:
-    match: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
+    static propTypes = {
+        // react-router 4:
+        match: PropTypes.object.isRequired,
+        location: PropTypes.object.isRequired,
+        history: PropTypes.object.isRequired,
 
-    // view props:
-    currentView: PropTypes.string.isRequired,
-    // view actions:
-    enterHome: PropTypes.func.isRequired,
-    leaveHome: PropTypes.func.isRequired
-  };
+        // view props:
+        currentView: PropTypes.string.isRequired,
+        // view actions:
+        enterHome: PropTypes.func.isRequired,
+        leaveHome: PropTypes.func.isRequired
+    }
 
-  state = {
-    viewEntersAnim: true
-  };
+    state = {
+        viewEntersAnim: true
+    }
 
-  componentDidMount() {
-    const { enterHome } = this.props;
-    enterHome();
-  }
+    componentDidMount() {
+        const { enterHome } = this.props
+        enterHome()
+    }
 
-  componentWillUnmount() {
-    const { leaveHome } = this.props;
-    leaveHome();
-  }
+    componentWillUnmount() {
+        const { leaveHome } = this.props
+        leaveHome()
+    }
 
-  render() {
-    const {
-      viewEntersAnim
-    } = this.state;
+    render() {
+        const { viewEntersAnim } = this.state
 
-    return (
-      <div
-        key="homeView"
-        className={cx({ 'view-enter': viewEntersAnim })}>
-        <Helmet>
-          <title>About</title>
-        </Helmet>
+        return (
+            <div
+                key="homeView"
+                className={cx({ 'view-enter': viewEntersAnim })}
+            >
+                <Helmet>
+                    <title>About</title>
+                </Helmet>
 
-
-        <Link
-          className="btn btn-success"
-          to={'/about'}>
-          <i className="fa fa-info"></i>
-          &nbsp;
-              go to about
-            </Link>
-      </div>
-    );
-  }
+                <Link className="btn btn-success" to={'/about'}>
+                    <i className="fa fa-info" />
+                    &nbsp; go to about
+                </Link>
+            </div>
+        )
+    }
 }
 
-export default Home;
+export default Home

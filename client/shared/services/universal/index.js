@@ -7,5 +7,5 @@
   * @returns {boolean}
   */
 export function isBrowserSide(): boolean {
-  return typeof window === 'object';
+    return typeof window === 'object'
 }

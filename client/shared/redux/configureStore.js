@@ -1,47 +1,47 @@
-import { createStore, applyMiddleware, compose } from 'redux';
-import thunk from 'redux-thunk';
-import axios from 'axios';
-import getReducers from '../reducers';
+import { createStore, applyMiddleware, compose } from 'redux'
+import thunk from 'redux-thunk'
+import axios from 'axios'
+import getReducers from '../reducers'
 
 function configureStore(initialState) {
-  const enhancers = compose(
-    // Middleware store enhancer.
-    applyMiddleware(
-      // Initialising redux-thunk with extra arguments will pass the below
-      // arguments to all the redux-thunk actions. Below we are passing a
-      // preconfigured axios instance which can be used to fetch data with.
-      // @see https://github.com/gaearon/redux-thunk
-      thunk.withExtraArgument({ axios }),
-      // apolloClient.middleware(),
-    ),
-    // Redux Dev Tools store enhancer.
-    // @see https://github.com/zalmoxisus/redux-devtools-extension
-    // We only want this enhancer enabled for development and when in a browser
-    // with the extension installed.
-    process.env.NODE_ENV === 'development' &&
-    typeof window !== 'undefined' &&
-    typeof window.devToolsExtension !== 'undefined'
-      ? // Call the brower extension function to create the enhancer.
-        window.devToolsExtension()
-      : // Else we return a no-op function.
-        f => f,
-  );
+    const enhancers = compose(
+        // Middleware store enhancer.
+        applyMiddleware(
+            // Initialising redux-thunk with extra arguments will pass the below
+            // arguments to all the redux-thunk actions. Below we are passing a
+            // preconfigured axios instance which can be used to fetch data with.
+            // @see https://github.com/gaearon/redux-thunk
+            thunk.withExtraArgument({ axios })
+            // apolloClient.middleware(),
+        ),
+        // Redux Dev Tools store enhancer.
+        // @see https://github.com/zalmoxisus/redux-devtools-extension
+        // We only want this enhancer enabled for development and when in a browser
+        // with the extension installed.
+        process.env.NODE_ENV === 'development' &&
+        typeof window !== 'undefined' &&
+        typeof window.devToolsExtension !== 'undefined'
+            ? // Call the brower extension function to create the enhancer.
+              window.devToolsExtension()
+            : // Else we return a no-op function.
+              f => f
+    )
 
-  const store = initialState
-    ? createStore(getReducers(), initialState, enhancers)
-    : createStore(getReducers(), enhancers);
+    const store = initialState
+        ? createStore(getReducers(), initialState, enhancers)
+        : createStore(getReducers(), enhancers)
 
-  if (process.env.NODE_ENV === 'development' && module.hot) {
-    // Enable Webpack hot module replacement for reducers. This is so that we
-    // don't lose all of our current application state during hot reloading.
-    module.hot.accept('../reducers', () => {
-      const nextRootReducer = require('../reducers').default; // eslint-disable-line global-require
+    if (process.env.NODE_ENV === 'development' && module.hot) {
+        // Enable Webpack hot module replacement for reducers. This is so that we
+        // don't lose all of our current application state during hot reloading.
+        module.hot.accept('../reducers', () => {
+            const nextRootReducer = require('../reducers').default // eslint-disable-line global-require
 
-      store.replaceReducer(nextRootReducer);
-    });
-  }
+            store.replaceReducer(nextRootReducer)
+        })
+    }
 
-  return store;
+    return store
 }
 
 // NOTE: If we create an '/api' endpoint in our application then we will neeed to
@@ -64,4 +64,4 @@ function configureStore(initialState) {
 //   axios: axios.create(axiosConfig),
 // })
 
-export default configureStore;
+export default configureStore

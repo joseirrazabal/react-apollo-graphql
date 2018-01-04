@@ -1,12 +1,12 @@
 // @flow weak
 
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-const Jumbotron = ({ children }) => <div className="jumbotron">{children}</div>;
+const Jumbotron = ({ children }) => <div className="jumbotron">{children}</div>
 
 Jumbotron.propTypes = {
-  children: PropTypes.node,
-};
+    children: PropTypes.node
+}
 
-export default Jumbotron;
+export default Jumbotron

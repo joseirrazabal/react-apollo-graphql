@@ -1,11 +1,11 @@
-import { ApolloClient } from 'apollo-client';
-import { ApolloLink, split } from 'apollo-link';
-import { HttpLink } from 'apollo-link-http';
-import { WebSocketLink } from 'apollo-link-ws';
-import { getMainDefinition } from 'apollo-utilities';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import fetch from 'node-fetch';
-import { onError } from 'apollo-link-error';
+import { ApolloClient } from 'apollo-client'
+import { ApolloLink, split } from 'apollo-link'
+import { HttpLink } from 'apollo-link-http'
+import { WebSocketLink } from 'apollo-link-ws'
+import { getMainDefinition } from 'apollo-utilities'
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import fetch from 'node-fetch'
+import { onError } from 'apollo-link-error'
 
 // The ApolloClient takes its options as well as a network interface.
 // function createApolloClient({ clientOptions = {}, networkInterface }) {
@@ -31,18 +31,18 @@ function createApolloClient() {
     // );
 
     const httpLink = new HttpLink({
-        uri: '/graphql',
-    });
+        uri: '/graphql'
+    })
 
     const middlewareLink = new ApolloLink((operation, forward) => {
         operation.setContext({
             headers: {
-                authorization: localStorage.getItem('token') || null,
-            },
-        });
-        return forward(operation);
-    });
-    const httpLinkFinal = middlewareLink.concat(httpLink);
+                authorization: localStorage.getItem('token') || null
+            }
+        })
+        return forward(operation)
+    })
+    const httpLinkFinal = middlewareLink.concat(httpLink)
 
     const errorLink = onError(({ graphQLErrors, networkError }) => {
         if (graphQLErrors)
@@ -50,9 +50,9 @@ function createApolloClient() {
                 console.log(
                     `[GraphQL error]: Message: ${message}, Location: ${location}, Path: ${path}`
                 )
-            );
-        if (networkError) console.log(`[Network error]: ${networkError}`);
-    });
+            )
+        if (networkError) console.log(`[Network error]: ${networkError}`)
+    })
 
     if (typeof window !== 'undefined') {
         const wsLink = new WebSocketLink({
@@ -60,19 +60,22 @@ function createApolloClient() {
             options: {
                 reconnect: true,
                 connectionParams: {
-                    authorization: localStorage.getItem('token') || null,
-                },
-            },
-        });
+                    authorization: localStorage.getItem('token') || null
+                }
+            }
+        })
 
         const link = split(
             ({ query }) => {
-                const { kind, operation } = getMainDefinition(query);
-                return kind === 'OperationDefinition' && operation === 'subscription';
+                const { kind, operation } = getMainDefinition(query)
+                return (
+                    kind === 'OperationDefinition' &&
+                    operation === 'subscription'
+                )
             },
             wsLink,
-            httpLinkFinal,
-        );
+            httpLinkFinal
+        )
 
         // const clientOptions = {
         //     initialState: preloadedState,
@@ -80,30 +83,28 @@ function createApolloClient() {
         //     connectToDevTools: true
         // };
 
-
         return new ApolloClient({
             ssrForceFetchDelay: 100,
             connectToDevTools: true,
             link,
-            cache: new InMemoryCache(),
+            cache: new InMemoryCache()
             // ...options,
-        });
-
+        })
     } else {
         const queryOrMutationLink = (config = {}) =>
             new ApolloLink((operation, forward) => {
                 operation.setContext({
                     credentials: 'same-origin',
                     headers: {
-                        authorization: localStorage.getItem('token') || null,
-                    },
-                });
-                return forward(operation);
+                        authorization: localStorage.getItem('token') || null
+                    }
+                })
+                return forward(operation)
             }).concat(
                 new HttpLink({
-                    ...config,
+                    ...config
                 })
-                );
+            )
 
         return new ApolloClient({
             ssrMode: true,
@@ -111,12 +112,12 @@ function createApolloClient() {
             link: ApolloLink.from([
                 queryOrMutationLink({
                     fetch,
-                    uri: `/graphql`,
-                }),
+                    uri: `/graphql`
+                })
             ]),
-            cache: new InMemoryCache(),
-        });
+            cache: new InMemoryCache()
+        })
     }
 }
 
-export default createApolloClient;
+export default createApolloClient

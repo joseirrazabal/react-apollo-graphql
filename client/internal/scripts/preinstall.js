@@ -8,43 +8,45 @@
 
 /* eslint-disable */
 
-var exec = require('child_process').exec;
-var existsSync = require('fs').existsSync;
-var pathResolve = require('path').resolve;
+var exec = require('child_process').exec
+var existsSync = require('fs').existsSync
+var pathResolve = require('path').resolve
 
-if (existsSync(pathResolve(__dirname, '../../node_modules'))){
-  // An install has already occurred.
-  return;
+if (existsSync(pathResolve(__dirname, '../../node_modules'))) {
+    // An install has already occurred.
+    return
 }
 
 // Inspired by "create-react-app". Thanks @gaearon :)
 function checkNodeVersion() {
-  var semver = require('semver');
+    var semver = require('semver')
 
-  if (!semver.satisfies(process.version, packageJson.engines.node)) {
-    console.error(
-      'You are currently running Node %s but %s requires %s. Please use a supported version of Node.\n',
-      process.version,
-      packageJson.name,
-      packageJson.engines.node
-    );
-    process.exit(1);
-  }
+    if (!semver.satisfies(process.version, packageJson.engines.node)) {
+        console.error(
+            'You are currently running Node %s but %s requires %s. Please use a supported version of Node.\n',
+            process.version,
+            packageJson.name,
+            packageJson.engines.node
+        )
+        process.exit(1)
+    }
 }
 
-var packageJson = require('../../package.json');
-if (!packageJson.engines
-  || !packageJson.engines.node
-  || !packageJson.devDependencies
-  || !packageJson.devDependencies.semver) {
-  // The package has already been customised. Ignore this script.
-  return;
+var packageJson = require('../../package.json')
+if (
+    !packageJson.engines ||
+    !packageJson.engines.node ||
+    !packageJson.devDependencies ||
+    !packageJson.devDependencies.semver
+) {
+    // The package has already been customised. Ignore this script.
+    return
 }
 
 exec(
-  'npm install semver@' + packageJson.devDependencies.semver,
-  function installSemverCb(err, stdout, stderr) {
-    if (err) throw err;
-    checkNodeVersion();
-  }
+    'npm install semver@' + packageJson.devDependencies.semver,
+    function installSemverCb(err, stdout, stderr) {
+        if (err) throw err
+        checkNodeVersion()
+    }
 )
