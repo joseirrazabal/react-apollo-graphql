@@ -7,8 +7,6 @@ import { Redirect, withRouter } from 'react-router-dom';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 
-import navigationModel from '../../models/navigation.json';
-
 import Header from '../../components/Header/';
 import Sidebar from '../../components/Sidebar/';
 import Breadcrumb from '../../components/Breadcrumb/';
@@ -29,7 +27,7 @@ class PrivateRoute extends Component {
   };
 
   state = {
-    navModel: navigationModel,
+    navModel: {},
   };
 
   _isLoggedIn = () => {

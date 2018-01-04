@@ -19,10 +19,9 @@ export const MainRoutes = () => (
     <Route path="/login" component={ConnectedLogin} />
     <Route path="/register" component={ConnectedLogin} />
 
-    { /* <PrivateRoute exact path="/" component={ConnectedHome} /> */ }
-    { /* <PrivateRoute path="/" component={ConnectedHome} /> */ }
+    { /* <Route exact path="/" component={ConnectedHome} /> */ }
+    <Redirect exact from="/" to="/dashboard" />
     <PrivateRoute path="/dashboard" component={ConnectedHome} />
-    <Redirect from="/" to="/dashboard" />
 
     <Route path="*" component={PageNotFound} />
   </Switch>

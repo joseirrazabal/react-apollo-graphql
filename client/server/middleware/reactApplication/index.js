@@ -11,7 +11,6 @@ import { ApolloProvider, getDataFromTree } from "react-apollo";
 import configureStore from "../../../shared/redux/configureStore";
 import {
   createApolloClient,
-  getNetworkInterface
 } from "../../../shared/apollo";
 import config from "../../../config";
 import App from "../../../shared/components/App";
@@ -35,11 +34,6 @@ export default (async function reactApplicationMiddleware(request, response) {
   // Apollo setup
   // all options described below
   // @see http://dev.apollodata.com/core/apollo-client-api.html#constructor
-  const clientOptions = {
-    // SSR mode prevents both the server and the client requesting the same data --
-    // stops you from making two requests for the same data.
-    ssrMode: true
-  };
 
   // Network interface is responsible for fetching your data. It makes the request using
   // the network connection.
@@ -47,14 +41,8 @@ export default (async function reactApplicationMiddleware(request, response) {
   // https://github.com/sysgears/persistgraphql-webpack-plugin allows you to perform
   // queries without making a network request.
   // Pass our headers to the networkInterface so that we can set headers / provide cookie or token.
-  const networkInterface = getNetworkInterface(clientOptions, request.headers);
 
-  // const apolloClient = createApolloClient({
-    // request,
-    // clientOptions,
-    // networkInterface
-  // });
-  const apolloClient = createApolloClient()
+  const apolloClient = createApolloClient();
 
   // It's possible to disable SSR, which can be useful in development mode.
   // In this case traditional client side only rendering will occur.
@@ -83,7 +71,7 @@ export default (async function reactApplicationMiddleware(request, response) {
 
   const initialState = {};
   // Create the redux store.
-  const store = configureStore(apolloClient, initialState);
+  const store = configureStore(initialState);
 
   // Declare our React application.
   const app = (

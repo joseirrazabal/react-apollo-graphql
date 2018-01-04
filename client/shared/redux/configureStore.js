@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import axios from 'axios';
 import getReducers from '../reducers';
 
-function configureStore(apolloClient, initialState) {
+function configureStore(initialState) {
   const enhancers = compose(
     // Middleware store enhancer.
     applyMiddleware(
@@ -28,8 +28,8 @@ function configureStore(apolloClient, initialState) {
   );
 
   const store = initialState
-    ? createStore(getReducers(apolloClient), initialState, enhancers)
-    : createStore(getReducers(apolloClient), enhancers);
+    ? createStore(getReducers(), initialState, enhancers)
+    : createStore(getReducers(), enhancers);
 
   if (process.env.NODE_ENV === 'development' && module.hot) {
     // Enable Webpack hot module replacement for reducers. This is so that we

@@ -4,7 +4,7 @@ import React, {
   PureComponent,
 } from 'react';
 import PropTypes from 'prop-types';
-import Jumbotron from '../../components/jumbotron/Jumbotron';
+import Helmet from 'react-helmet';
 import cx from 'classnames';
 import { Link } from 'react-router-dom';
 
@@ -45,6 +45,11 @@ class Home extends PureComponent {
       <div
         key="homeView"
         className={cx({ 'view-enter': viewEntersAnim })}>
+        <Helmet>
+          <title>About</title>
+        </Helmet>
+
+
         <Link
           className="btn btn-success"
           to={'/about'}>

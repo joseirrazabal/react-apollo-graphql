@@ -11,8 +11,6 @@ import configureStore from "../shared/redux/configureStore";
 import { createApolloClient } from "../shared/apollo";
 import { Provider } from 'react-redux';
 
-import { ScrollToTop } from '../shared/components/App/components';
-
 import "./polyfills";
 
 import ReactHotLoader from "./components/ReactHotLoader";
@@ -26,19 +24,10 @@ const preloadedState = window.__APOLLO_STATE__;
 // Apollo setup
 // all options described below
 // @see http://dev.apollodata.com/core/apollo-client-api.html#constructor
-const clientOptions = {
-  initialState: preloadedState,
-  ssrForceFetchDelay: 100,
-  connectToDevTools: true
-};
-const apolloClient = createApolloClient({
-  // clientOptions,
-  // networkInterface: getNetworkInterface(),
-});
+const apolloClient = createApolloClient();
 
 // Create our Redux store.
 const store = configureStore(
-  apolloClient,
   // Server side rendering would have mounted our state on this global.
   preloadedState
 );
@@ -65,9 +54,7 @@ function renderApp(TheApp) {
         <ApolloProvider client={apolloClient}>
           <Provider store={store}>
             <BrowserRouter forceRefresh={!supportsHistory}>
-              <ScrollToTop>
-                <TheApp />
-              </ScrollToTop>
+              <TheApp />
             </BrowserRouter>
           </Provider>
         </ApolloProvider>

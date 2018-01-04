@@ -135,7 +135,6 @@ export default function (state = initialState, action) {
 export function receivedUserLoggedIn(userToken = null, user = emptyUser, time = moment().format(dateFormat)) {
   const isAuthenticated = userToken ? true : false;
 
-  console.log(userToken)
   auth.clearAllAppStorage();  // clear previous token
   auth.setToken(userToken);   // set token to default store = localStorage and to default token key = 'token'
   auth.setUserInfo(user);

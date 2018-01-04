@@ -131,7 +131,7 @@ class Login extends PureComponent {
 
     try {
       await loginUser({ variables: values });
-      history.push({ pathname: '/protected' });
+      history.push({ pathname: '/' });
     } catch (error) {
       console.log('login went wrong..., error: ', error);
       // this.setState({
