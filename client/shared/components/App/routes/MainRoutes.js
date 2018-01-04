@@ -2,7 +2,11 @@
 
 import React from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
-import { ConnectedLogin, ConnectedHome } from '../containers'
+import {
+    ConnectedLogin,
+    ConnectedHome,
+    ConnectedProtected
+} from '../containers'
 
 import PrivateRoute from '../components/privateRoute'
 import LogoutRoute from '../components/logoutRoute'
@@ -19,6 +23,7 @@ export const MainRoutes = () => (
         {/* <Route exact path="/" component={ConnectedHome} /> */}
         <Redirect exact from="/" to="/dashboard" />
         <PrivateRoute path="/dashboard" component={ConnectedHome} />
+        <PrivateRoute path="/about" component={ConnectedProtected} />
 
         <Route path="*" component={PageNotFound} />
     </Switch>

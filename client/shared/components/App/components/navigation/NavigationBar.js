@@ -11,6 +11,8 @@ import IconButton from 'material-ui/IconButton'
 import MenuIcon from 'material-ui-icons/Menu'
 import AccountCircle from 'material-ui-icons/AccountCircle'
 import Menu, { MenuItem } from 'material-ui/Menu'
+import Drawer from 'material-ui/Drawer'
+import { Link } from 'react-router-dom'
 
 const styles = {
     root: {
@@ -43,6 +45,12 @@ class MenuAppBar extends React.Component {
         this.setState({ anchorEl: null })
     }
 
+    handleToggle = () => this.setState({ menuOpen: !this.state.menuOpen })
+
+    closeLeftNav = () => {
+        this.setState({ menuOpen: false })
+    }
+
     render() {
         const { classes } = this.props
         const { auth, anchorEl } = this.state
@@ -56,6 +64,7 @@ class MenuAppBar extends React.Component {
                             className={classes.menuButton}
                             color="contrast"
                             aria-label="Menu"
+                            onClick={this.handleToggle}
                         >
                             <MenuIcon />
                         </IconButton>
@@ -64,7 +73,7 @@ class MenuAppBar extends React.Component {
                             color="inherit"
                             className={classes.flex}
                         >
-                            Title
+                            <Link to="/">Title</Link>
                         </Typography>
                         {auth && (
                             <div>
@@ -93,14 +102,37 @@ class MenuAppBar extends React.Component {
                                     <MenuItem onClick={this.handleClose}>
                                         Profile
                                     </MenuItem>
-                                    <MenuItem onClick={this.handleClose}>
-                                        My account
+                                    <MenuItem
+                                        onClick={this.handleClose}
+                                        to="/logout"
+                                        component={Link}
+                                    >
+                                        Logout
                                     </MenuItem>
                                 </Menu>
                             </div>
                         )}
                     </Toolbar>
                 </AppBar>
+                <Drawer
+                    open={this.state.menuOpen}
+                    onClose={this.closeLeftNav}
+                >
+                    <MenuItem
+                        onClick={this.closeLeftNav}
+                        to="/dashboard"
+                        component={Link}
+                    >
+                        Dashboard
+                    </MenuItem>
+                    <MenuItem
+                        onClick={this.closeLeftNav}
+                        to="/about"
+                        component={Link}
+                    >
+                        About
+                    </MenuItem>
+                </Drawer>
             </div>
         )
     }
