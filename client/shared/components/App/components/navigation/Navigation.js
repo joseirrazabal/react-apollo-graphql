@@ -114,10 +114,7 @@ class MenuAppBar extends React.Component {
                         )}
                     </Toolbar>
                 </AppBar>
-                <Drawer
-                    open={this.state.menuOpen}
-                    onClose={this.closeLeftNav}
-                >
+                <Drawer open={this.state.menuOpen} onClose={this.closeLeftNav}>
                     <MenuItem
                         onClick={this.closeLeftNav}
                         to="/dashboard"

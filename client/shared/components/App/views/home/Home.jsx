@@ -46,7 +46,7 @@ class Home extends PureComponent {
                     <title>About</title>
                 </Helmet>
 
-                <Link className="btn btn-success" to={'/about'}>
+                <Link className="btn btn-success" to={'/menuItem'}>
                     <i className="fa fa-info" />
                     &nbsp; go to about
                 </Link>

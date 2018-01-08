@@ -2,30 +2,88 @@
 
 import React from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
-import {
-    ConnectedLogin,
-    ConnectedHome,
-    ConnectedProtected
-} from '../containers'
-
-import PrivateRoute from '../components/privateRoute'
-import LogoutRoute from '../components/logoutRoute'
 
 import { PageNotFound } from '../views'
 
+import { Layout } from '../components'
+
+import { PrivateRoute, Login, Logout, Home, MenuItem } from '../containers'
+
+const routes = [
+    {
+        path: '/login',
+        Component: Login,
+        useLayout: false,
+        isPrivate: false
+    },
+    {
+        path: '/logout',
+        Component: Logout,
+        useLayout: false,
+        isPrivate: false
+    },
+    {
+        path: '/register',
+        Component: Login,
+        useLayout: false,
+        isPrivate: false
+    },
+    {
+        path: '/dashboard',
+        Component: Home,
+        useLayout: true,
+        isPrivate: true
+    },
+    {
+        path: '/menuItem',
+        Component: MenuItem,
+        useLayout: true,
+        isPrivate: true
+    },
+    {
+        path: '*',
+        Component: PageNotFound,
+        useLayout: false,
+        isPrivate: false
+    }
+]
+
+const AppRoute = ({ path, component: Component, isPrivate }) => {
+    if (isPrivate) {
+        return (
+            <Layout>
+                <PrivateRoute path={path} component={Component} />
+            </Layout>
+        )
+    } else {
+        return (
+            <Route
+                path={path}
+                render={props => (
+                    <Layout>
+                        <Component {...props} />
+                    </Layout>
+                )}
+            />
+        )
+    }
+}
+
 export const MainRoutes = () => (
     <Switch>
-        <LogoutRoute path="/logout" />
-
-        <Route path="/login" component={ConnectedLogin} />
-        <Route path="/register" component={ConnectedLogin} />
-
-        {/* <Route exact path="/" component={ConnectedHome} /> */}
         <Redirect exact from="/" to="/dashboard" />
-        <PrivateRoute path="/dashboard" component={ConnectedHome} />
-        <PrivateRoute path="/about" component={ConnectedProtected} />
 
-        <Route path="*" component={PageNotFound} />
+        {routes.map(({ path, useLayout, Component, isPrivate }) => {
+            let RouteCustom = useLayout ? AppRoute : Route
+            return (
+                <RouteCustom
+                    key={path}
+                    path={path}
+                    component={Component}
+                    isPrivate={isPrivate}
+                />
+            )
+        })}
     </Switch>
 )
 

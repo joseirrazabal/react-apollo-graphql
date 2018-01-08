@@ -3,7 +3,7 @@ import Helmet from 'react-helmet'
 
 import config from '../../../config'
 import { MainRoutes } from './routes/MainRoutes'
-import { ScrollToTop, BackToTop, MenuAppBar } from './components'
+import { ScrollToTop } from './components'
 
 import '../../../scss/style.scss'
 
@@ -131,32 +131,8 @@ function App() {
                         content="/favicons/mstile-310x310.png"
                     />
                     <link rel="manifest" href="/manifest.json" />
-
-                    {/*
-          <link
-            rel="stylesheet"
-            href="//fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic"
-          />
-          <link
-            rel="stylesheet"
-            href="//cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css"
-          />
-        */}
                 </Helmet>
-
-                <div id="appContainer">
-                    <MenuAppBar
-                        //   brand={navModel.brand}
-                        //   navModel={navModel}
-                        userIsAuthenticated={false}
-                        //   handleLeftNavItemClick={this.handleLeftNavItemClick}
-                        //   handleRightNavItemClick={this.handleRightNavItemClick}
-                    />
-                    <div className="container-fluid">
-                        <MainRoutes />
-                    </div>
-                    <BackToTop minScrollY={40} scrollTo={'appContainer'} />
-                </div>
+                <MainRoutes />
             </div>
         </ScrollToTop>
     )
