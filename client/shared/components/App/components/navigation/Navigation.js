@@ -72,8 +72,11 @@ class MenuAppBar extends React.Component {
                             type="title"
                             color="inherit"
                             className={classes.flex}
+                            style={{ textDecoration: 'none' }}
+                            to="/"
+                            component={Link}
                         >
-                            <Link to="/">Title</Link>
+                            Titulo de app
                         </Typography>
                         {auth && (
                             <div>

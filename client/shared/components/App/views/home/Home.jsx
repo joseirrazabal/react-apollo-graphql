@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
 import cx from 'classnames'
 import { Link } from 'react-router-dom'
+import Button from 'material-ui/Button'
 
 class Home extends PureComponent {
     static propTypes = {
@@ -46,10 +47,7 @@ class Home extends PureComponent {
                     <title>About</title>
                 </Helmet>
 
-                <Link className="btn btn-success" to={'/menuItem'}>
-                    <i className="fa fa-info" />
-                    &nbsp; go to about
-                </Link>
+                <Button raised color="primary" to="/menuItem" component={Link} >Default</Button>
             </div>
         )
     }
