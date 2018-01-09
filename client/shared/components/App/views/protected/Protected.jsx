@@ -5,8 +5,7 @@ import PropTypes from 'prop-types'
 import cx from 'classnames'
 import { Field, reduxForm } from 'redux-form/immutable'
 
-import { renderField } from '../../components/Input'
-import { ErrorAlert } from '../../components'
+import { renderField, ErrorAlert } from '../../components'
 
 class Protected extends PureComponent {
     static propTypes = {

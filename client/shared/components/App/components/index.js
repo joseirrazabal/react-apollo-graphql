@@ -9,3 +9,5 @@ export { default as BackToTop } from './backToTop'
 export { default as ErrorAlert } from './alert/ErrorAlert'
 export { default as WarningAlert } from './alert/WarningAlert'
 export { default as Alert } from './alert/Alert'
+
+export { default as renderField } from './Input'

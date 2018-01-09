@@ -1,20 +1,28 @@
 import React from 'react'
+import { withStyles } from 'material-ui/styles'
+import Paper from 'material-ui/Paper'
+import Grid from 'material-ui/Grid'
 
 import { ScrollToTop, BackToTop, MenuAppBar } from '../../components'
 
-export default function Layout({ children }) {
+const styles = theme => ({
+    root: {
+        flexGrow: 1,
+        marginTop: 30
+    }
+})
+
+function Layout(props) {
+    let { children, classes } = props
     return (
         <div id="appLayout">
-            <MenuAppBar
-                //   brand={navModel.brand}
-                //   navModel={navModel}
-                userIsAuthenticated={false}
-                //   handleLeftNavItemClick={this.handleLeftNavItemClick}
-                //   handleRightNavItemClick={this.handleRightNavItemClick}
-            />
+            <MenuAppBar />
+            {/* <div className={classes.root}>{children}</div> */}
             <div className="container-fluid">{children}</div>
 
             <BackToTop minScrollY={40} scrollTo={'appContainer'} />
         </div>
     )
 }
+
+export default withStyles(styles)(Layout)

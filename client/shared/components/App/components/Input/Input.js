@@ -12,7 +12,7 @@ import {
     InputGroupAddon
 } from 'reactstrap'
 
-export const renderField = ({
+const renderField = ({
     input,
     label,
     type,
@@ -37,3 +37,5 @@ export const renderField = ({
         </InputGroup>
     )
 }
+
+export default renderField

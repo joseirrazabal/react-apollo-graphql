@@ -7,12 +7,6 @@ import { Redirect, withRouter } from 'react-router-dom'
 import gql from 'graphql-tag'
 import { graphql } from 'react-apollo'
 
-import Header from '../../components/Header/'
-import Sidebar from '../../components/Sidebar/'
-import Breadcrumb from '../../components/Breadcrumb/'
-import Aside from '../../components/Aside/'
-import Footer from '../../components/Footer/'
-
 class PrivateRoute extends Component {
     static propTypes = {
         // react-router 4:

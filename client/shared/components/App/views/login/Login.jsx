@@ -5,8 +5,8 @@ import PropTypes from 'prop-types'
 import cx from 'classnames'
 import { Link } from 'react-router-dom'
 import { Field, reduxForm } from 'redux-form/immutable'
-import { ErrorAlert } from '../../components'
-import { renderField } from '../../components/Input'
+
+import { renderField, ErrorAlert } from '../../components'
 
 import {
     Container,

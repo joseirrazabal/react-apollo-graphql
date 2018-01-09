@@ -2,7 +2,6 @@
 
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import Jumbotron from '../../components/jumbotron/Jumbotron'
 import cx from 'classnames'
 
 class PageNotFound extends PureComponent {
@@ -16,9 +15,7 @@ class PageNotFound extends PureComponent {
     render() {
         return (
             <div className={cx({ 'view-enter': true })}>
-                <Jumbotron>
-                    <h1>Sorry this page does not exists...</h1>
-                </Jumbotron>
+                <h1>Sorry this page does not exists...</h1>
             </div>
         )
     }
