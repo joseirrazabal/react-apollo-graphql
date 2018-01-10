@@ -30,10 +30,8 @@ function Layout(props) {
 
     return (
         <MuiThemeProvider theme={muiTheme}>
-            <div id="appLayout">
-                <MenuAppBar />
-                {/* <div className={classes.root}>{children}</div> */}
-                <div className="container-fluid">{children}</div>
+            <div className="body">
+                <MenuAppBar component={children} />
 
                 <BackToTop minScrollY={40} scrollTo={'appContainer'} />
             </div>
