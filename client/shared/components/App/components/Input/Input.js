@@ -1,16 +1,7 @@
 import React from 'react'
-import {
-    Container,
-    Row,
-    Col,
-    CardGroup,
-    Card,
-    CardBody,
-    Button,
-    Input,
-    InputGroup,
-    InputGroupAddon
-} from 'reactstrap'
+import TextField from 'material-ui/TextField'
+import Input, { InputLabel } from 'material-ui/Input'
+import { FormControl, FormHelperText } from 'material-ui/Form'
 
 const renderField = ({
     input,
@@ -20,6 +11,25 @@ const renderField = ({
     IconGroupAddon,
     meta: { touched, error, warning }
 }) => {
+    return (
+        <FormControl fullWidth error aria-describedby="name-error-text">
+            { false && <InputLabel htmlFor="name-error">{label}</InputLabel> }
+            <TextField
+                id="with-placeholder"
+                label={label}
+                placeholder={placeholder}
+                margin="normal"
+                {...input}
+            />
+            {touched &&
+                (error && (
+                    <FormHelperText id="name-error-text">
+                        {error}
+                    </FormHelperText>
+                ))}
+        </FormControl>
+    )
+    /*
     return (
         <InputGroup className="mb-3">
             {label && <label>{label}</label>}
@@ -36,6 +46,7 @@ const renderField = ({
                     (warning && <span>{warning}</span>))}
         </InputGroup>
     )
+    */
 }
 
 export default renderField

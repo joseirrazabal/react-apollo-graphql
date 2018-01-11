@@ -215,13 +215,13 @@ class PersistentDrawer extends React.Component {
                     <Divider />
                     <List className={classes.list}>
                         <div>
-                            <ListItem button>
+                            <ListItem button to="/" component={Link}>
                                 <ListItemIcon>
                                     <InboxIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Inbox" />
                             </ListItem>
-                            <ListItem button>
+                            <ListItem button to="/menuItem" component={Link}>
                                 <ListItemIcon>
                                     <StarIcon />
                                 </ListItemIcon>

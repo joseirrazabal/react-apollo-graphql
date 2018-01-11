@@ -10,11 +10,13 @@ import { ApolloProvider } from 'react-apollo'
 import configureStore from '../shared/redux/configureStore'
 import { createApolloClient } from '../shared/apollo'
 import { Provider } from 'react-redux'
+import { I18nextProvider } from 'react-i18next'
 
 import './polyfills'
 
 import ReactHotLoader from './components/ReactHotLoader'
 import App from '../shared/components/App'
+import i18n from './i18n' // initialized i18next instance
 
 // Get the DOM Element that will host our React application.
 const container = document.querySelector('#app')
@@ -56,7 +58,9 @@ function renderApp(TheApp) {
                 <ApolloProvider client={apolloClient}>
                     <Provider store={store}>
                         <BrowserRouter forceRefresh={!supportsHistory}>
-                            <TheApp />
+                            <I18nextProvider i18n={i18n}>
+                                <TheApp />
+                            </I18nextProvider>
                         </BrowserRouter>
                     </Provider>
                 </ApolloProvider>

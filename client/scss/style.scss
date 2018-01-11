@@ -14,13 +14,13 @@ $simple-line-font-path: "~simple-line-icons/fonts/";
 @import "~simple-line-icons/scss/simple-line-icons";
 
 // Override Boostrap variables
-@import "bootstrap-variables";
+// @import "bootstrap-variables";
 
 // Import Bootstrap source files from node_modules
-@import "node_modules/bootstrap/scss/bootstrap";
+// @import "node_modules/bootstrap/scss/bootstrap";
 
 // Import core styles
-@import "core/core";
+// @import "core/core";
 
 // Custom styles
-@import "custom";
+// @import "custom";

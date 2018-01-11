@@ -4,6 +4,9 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import cx from 'classnames'
 import { Field, reduxForm } from 'redux-form/immutable'
+import Button from 'material-ui/Button'
+import Save from 'material-ui-icons/Save'
+import { translate } from 'react-i18next'
 
 import { renderField, ErrorAlert } from '../../components'
 
@@ -65,7 +68,8 @@ class Protected extends PureComponent {
             reset,
             submitting,
             mutationLoading,
-            error
+            error,
+            t
         } = this.props
         const { viewEntersAnim } = this.state
 
@@ -115,25 +119,27 @@ class Protected extends PureComponent {
                             name="order"
                             type="number"
                             component={renderField}
-                            label="Orden"
-                            placeholder="Orden"
+                            label={t('orden')}
+                            placeholder={t('orden')}
                         />
                     </div>
-                    <button
+                    <Button
                         type="submit"
-                        className="btn btn-primary"
                         disabled={pristine || submitting || mutationLoading}
+                        raised
+                        color="primary"
                     >
-                        Submit
-                    </button>
-                    <button
-                        type="button"
-                        className="btn btn-default"
+                        <Save />
+                        {t('prueba')}
+                    </Button>
+                    <Button
                         disabled={pristine || submitting}
+                        raised
+                        color="accent"
                         onClick={reset}
                     >
-                        Clear Values
-                    </button>
+                        {t('asdf')}
+                    </Button>
                 </form>
             </div>
         )
@@ -150,7 +156,9 @@ const validate = values => {
     return errors
 }
 
-export default reduxForm({
+const Pretected = reduxForm({
     form: 'example',
     validate
 })(Protected)
+
+export default translate()(Pretected)

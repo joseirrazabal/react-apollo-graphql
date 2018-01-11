@@ -16,6 +16,9 @@ import ServerHTML from './ServerHTML'
 
 import { JobProvider, createJobContext } from 'react-jobs'
 import { Provider } from 'react-redux'
+
+import { I18nextProvider } from 'react-i18next'
+
 import { log } from '../../../internal/utils'
 
 /**
@@ -77,7 +80,9 @@ export default (async function reactApplicationMiddleware(request, response) {
             <StaticRouter location={request.url} context={reactRouterContext}>
                 <ApolloProvider client={apolloClient}>
                     <Provider store={store}>
-                        <App />
+                        <I18nextProvider i18n={request.i18n}>
+                            <App />
+                        </I18nextProvider>
                     </Provider>
                 </ApolloProvider>
             </StaticRouter>
