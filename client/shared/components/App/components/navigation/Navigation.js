@@ -295,7 +295,7 @@ class PersistentDrawer extends React.Component {
                             [classes[`appBarShift-${anchor}`]]: open
                         })}
                     >
-                        <Toolbar disableGutters={!open}>
+                        <Toolbar>
                             <IconButton
                                 color="contrast"
                                 aria-label="open drawer"
