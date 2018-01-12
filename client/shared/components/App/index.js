@@ -5,7 +5,7 @@ import config from '../../../config'
 import { MainRoutes } from './routes/MainRoutes'
 import { ScrollToTop } from './components'
 
-import '../../../scss/style.scss'
+// import '../../../scss/style.scss'
 
 function App() {
     return (

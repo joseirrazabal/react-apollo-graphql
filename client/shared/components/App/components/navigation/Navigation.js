@@ -31,7 +31,7 @@ const drawerWidth = 240
 const styles = theme => ({
     root: {
         width: '100%',
-        // height: 430,
+        height: '100%',
         // marginTop: theme.spacing.unit * 3,
         zIndex: 1,
         overflow: 'hidden'
@@ -86,7 +86,15 @@ const styles = theme => ({
         ...theme.mixins.toolbar
     },
     content: {
-        width: '100%',
+        position: 'absolute',
+        left: '0px',
+        right: '0px',
+        // top: '64px',
+        top: 56,
+        bottom: '0px',
+        // backgroundColor: 'rgb(48, 48, 48)',
+        overflow: 'auto',
+        // width: '100%',
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing.unit * 3,
@@ -94,7 +102,7 @@ const styles = theme => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen
         }),
-        marginTop: 56,
+        // marginTop: 56,
         [theme.breakpoints.up('sm')]: {
             content: {
                 height: 'calc(100% - 64px)',

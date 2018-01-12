@@ -2,11 +2,23 @@
 
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import cx from 'classnames'
 import { Field, reduxForm } from 'redux-form/immutable'
+import { translate } from 'react-i18next'
+import cx from 'classnames'
+
 import Button from 'material-ui/Button'
 import Save from 'material-ui-icons/Save'
-import { translate } from 'react-i18next'
+import { MenuItem } from 'material-ui/Menu'
+import Radio, { RadioButton } from 'material-ui/Radio'
+import { FormControlLabel } from 'material-ui/Form'
+
+import {
+    Checkbox,
+    RadioGroup,
+    Select,
+    TextField,
+    Switch
+} from 'redux-form-material-ui'
 
 import { renderField, ErrorAlert } from '../../components'
 
@@ -123,6 +135,33 @@ class Protected extends PureComponent {
                             placeholder={t('orden')}
                         />
                     </div>
+                    <Field
+                        name="plan"
+                        component={Select}
+                        placeholder="Select a plan"
+                    >
+                        <MenuItem value="monthly">Monthly</MenuItem>
+                        <MenuItem value="yearly">Yearly</MenuItem>
+                        <MenuItem value="lifetime">Lifetime</MenuItem>
+                    </Field>
+                    <FormControlLabel
+                        control={
+                            <Field name="agreeToTerms" component={Checkbox} />
+                        }
+                        label="Agree to terms?"
+                    />
+                    <FormControlLabel
+                        control={
+                            <Field name="receiveEmails" component={Switch} />
+                        }
+                        label="Please spam me!"
+                    />
+                    <Field name="bestFramework" component={RadioGroup}>
+                        <Radio value="react" label="React" />
+                        <Radio value="angular" label="Angular" />
+                        <Radio value="ember" label="Ember" />
+                    </Field>
+
                     <Button
                         type="submit"
                         disabled={pristine || submitting || mutationLoading}
