@@ -89,27 +89,23 @@ const styles = theme => ({
         position: 'absolute',
         left: '0px',
         right: '0px',
-        // top: '64px',
-        top: 56,
+        top: 64,
         bottom: '0px',
-        // backgroundColor: 'rgb(48, 48, 48)',
         overflow: 'auto',
-        // width: '100%',
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing.unit * 3,
+        // height: 'calc(100 - 56px)'
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen
         }),
-        // marginTop: 56,
         [theme.breakpoints.up('sm')]: {
             content: {
                 height: 'calc(100% - 64px)',
                 marginTop: 64
             }
-        },
-        height: 'calc(100 - 56px)'
+        }
     },
     'content-left': {
         // marginLeft: -drawerWidth
@@ -117,18 +113,22 @@ const styles = theme => ({
     },
     'content-right': {
         // marginRight: -drawerWidth
+        marginRight: drawerWidth
     },
     contentShift: {
+        width: `calc(100% - ${drawerWidth}px - ${theme.spacing.unit * 3})`,
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen
         })
     },
     'contentShift-left': {
-        marginLeft: 0
+        marginLeft: drawerWidth
+        // marginLeft: 0
     },
     'contentShift-right': {
-        marginRight: 0
+        marginRight: drawerWidth
+        // marginRight: 0
     }
 })
 
@@ -324,8 +324,8 @@ class PersistentDrawer extends React.Component {
                     {before}
                     <main
                         className={classNames(classes.content, {
-                            [classes.appBarShift]: open,
-                            [classes[`appBarShift-${anchor}`]]: open
+                            [classes.contentShift]: open,
+                            [classes[`contentShift-${anchor}`]]: open
                         })}
                     >
                         {component}
