@@ -2,7 +2,7 @@
 // we need a fetch polyfill for both the browser and server for Apollo.
 import 'isomorphic-fetch/fetch-npm-browserify'
 import React from 'react'
-import { render } from 'react-dom'
+import { hydrate } from 'react-dom'
 import BrowserRouter from 'react-router-dom/BrowserRouter'
 import asyncBootstrapper from 'react-async-bootstrapper'
 import { AsyncComponentProvider } from 'react-async-component'
@@ -71,7 +71,7 @@ function renderApp(TheApp) {
     // We use the react-async-component in order to support code splitting of
     // our bundle output. It's important to use this helper.
     // @see https://github.com/ctrlplusb/react-async-component
-    asyncBootstrapper(app).then(() => render(app, container))
+    asyncBootstrapper(app).then(() => hydrate(app, container))
 }
 
 // Execute the first render of our app.

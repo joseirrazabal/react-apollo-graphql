@@ -25,6 +25,7 @@ import MailIcon from 'material-ui-icons/Mail'
 import DeleteIcon from 'material-ui-icons/Delete'
 import ReportIcon from 'material-ui-icons/Report'
 import { Link } from 'react-router-dom'
+import { TransitionMotion } from 'react-motion'
 
 const drawerWidth = 240
 
@@ -138,7 +139,12 @@ class PersistentDrawer extends React.Component {
         anchor: 'left',
         openUserMenu: false,
         auth: true,
-        anchorEl: null
+        anchorEl: null,
+        isLoading: true
+    }
+
+    componentDidMount() {
+        this.setState({ isLoading: false })
     }
 
     handleDrawerOpen = () => {
@@ -287,51 +293,54 @@ class PersistentDrawer extends React.Component {
 
         return (
             <div className={classes.root}>
-                <div className={classes.appFrame}>
-                    <AppBar
-                        // position="static"
-                        className={classNames(classes.appBar, {
-                            [classes.appBarShift]: open,
-                            [classes[`appBarShift-${anchor}`]]: open
-                        })}
-                    >
-                        <Toolbar>
-                            <IconButton
-                                color="contrast"
-                                aria-label="open drawer"
-                                onClick={this.handleDrawerOpen}
-                                className={classNames(
-                                    classes.menuButton,
-                                    open && classes.hide
-                                )}
+                {this.state &&
+                    !this.state.isLoading && (
+                        <div className={classes.appFrame}>
+                            <AppBar
+                                // position="static"
+                                className={classNames(classes.appBar, {
+                                    [classes.appBarShift]: open,
+                                    [classes[`appBarShift-${anchor}`]]: open
+                                })}
                             >
-                                <MenuIcon />
-                            </IconButton>
-                            <Typography
-                                type="title"
-                                color="inherit"
-                                className={classes.flex}
-                                noWrap
-                                style={{ textDecoration: 'none' }}
-                                to="/"
-                                component={Link}
+                                <Toolbar>
+                                    <IconButton
+                                        color="contrast"
+                                        aria-label="open drawer"
+                                        onClick={this.handleDrawerOpen}
+                                        className={classNames(
+                                            classes.menuButton,
+                                            open && classes.hide
+                                        )}
+                                    >
+                                        <MenuIcon />
+                                    </IconButton>
+                                    <Typography
+                                        type="title"
+                                        color="inherit"
+                                        className={classes.flex}
+                                        noWrap
+                                        style={{ textDecoration: 'none' }}
+                                        to="/"
+                                        component={Link}
+                                    >
+                                        Titulo app
+                                    </Typography>
+                                    {auth && menuUser}
+                                </Toolbar>
+                            </AppBar>
+                            {before}
+                            <main
+                                className={classNames(classes.content, {
+                                    [classes.contentShift]: open,
+                                    [classes[`contentShift-${anchor}`]]: open
+                                })}
                             >
-                                Titulo app
-                            </Typography>
-                            {auth && menuUser}
-                        </Toolbar>
-                    </AppBar>
-                    {before}
-                    <main
-                        className={classNames(classes.content, {
-                            [classes.contentShift]: open,
-                            [classes[`contentShift-${anchor}`]]: open
-                        })}
-                    >
-                        {component}
-                    </main>
-                    {after}
-                </div>
+                                {component}
+                            </main>
+                            {after}
+                        </div>
+                    )}
             </div>
         )
     }
