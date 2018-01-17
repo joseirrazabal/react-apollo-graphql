@@ -247,7 +247,7 @@ apollo-server-core@^1.3.2:
     apollo-tracing "^0.1.0"
     graphql-extensions "^0.0.x"
 
-apollo-server-express@^1.1.0:
+apollo-server-express@^1.3.2:
   version "1.3.2"
   resolved "http://10.0.41.30:8080/apollo-server-express/-/apollo-server-express-1.3.2.tgz#0ff8201c0bf362804a151e1399767dae6ab7e309"
   dependencies:
@@ -3334,15 +3334,15 @@ graphql-extensions@^0.0.x:
     core-js "^2.5.3"
     source-map-support "^0.5.1"
 
-graphql-server-express@1.1.0:
-  version "1.1.0"
-  resolved "http://10.0.41.30:8080/graphql-server-express/-/graphql-server-express-1.1.0.tgz#28f3ccb51fcac552e47df5f010f05853269f03cb"
+graphql-server-express@1.3.2:
+  version "1.3.2"
+  resolved "http://10.0.41.30:8080/graphql-server-express/-/graphql-server-express-1.3.2.tgz#cb60614bda10ddd6657731b1584042ee081d5a7d"
   dependencies:
-    apollo-server-express "^1.1.0"
+    apollo-server-express "^1.3.2"
 
-graphql-tag@2.4.2:
-  version "2.4.2"
-  resolved "http://10.0.41.30:8080/graphql-tag/-/graphql-tag-2.4.2.tgz#6a63297d8522d03a2b72d26f1b239aab343840cd"
+graphql-tag@2.6.1:
+  version "2.6.1"
+  resolved "http://10.0.41.30:8080/graphql-tag/-/graphql-tag-2.6.1.tgz#4788d509f6e29607d947fc47a40c4e18f736d34a"
 
 graphql-tools@1.1.0:
   version "1.1.0"
@@ -3354,11 +3354,11 @@ graphql-tools@1.1.0:
   optionalDependencies:
     "@types/graphql" "^0.9.0"
 
-graphql@0.10.5:
-  version "0.10.5"
-  resolved "http://10.0.41.30:8080/graphql/-/graphql-0.10.5.tgz#c9be17ca2bdfdbd134077ffd9bbaa48b8becd298"
+graphql@0.12.3:
+  version "0.12.3"
+  resolved "http://10.0.41.30:8080/graphql/-/graphql-0.12.3.tgz#11668458bbe28261c0dcb6e265f515ba79f6ce07"
   dependencies:
-    iterall "^1.1.0"
+    iterall "1.1.3"
 
 growly@^1.3.0:
   version "1.3.0"
@@ -4163,7 +4163,7 @@ istanbul-reports@^1.1.3:
   dependencies:
     handlebars "^4.0.3"
 
-iterall@^1.1.0, iterall@^1.1.1:
+iterall@1.1.3, iterall@^1.1.1:
   version "1.1.3"
   resolved "http://10.0.41.30:8080/iterall/-/iterall-1.1.3.tgz#1cbbff96204056dde6656e2ed2e2226d0e6d72c9"
 
@@ -7670,17 +7670,17 @@ source-list-map@^2.0.0:
   version "2.0.0"
   resolved "http://10.0.41.30:8080/source-list-map/-/source-list-map-2.0.0.tgz#aaa47403f7b245a92fbc97ea08f250d6087ed085"
 
-source-map-support@0.4.18, source-map-support@^0.4.15:
-  version "0.4.18"
-  resolved "http://10.0.41.30:8080/source-map-support/-/source-map-support-0.4.18.tgz#0286a6de8be42641338594e97ccea75f0a2c585f"
-  dependencies:
-    source-map "^0.5.6"
-
-source-map-support@^0.5.0, source-map-support@^0.5.1:
+source-map-support@0.5.1, source-map-support@^0.5.0, source-map-support@^0.5.1:
   version "0.5.1"
   resolved "http://10.0.41.30:8080/source-map-support/-/source-map-support-0.5.1.tgz#72291517d1fd0cb9542cee6c27520884b5da1a07"
   dependencies:
     source-map "^0.6.0"
+
+source-map-support@^0.4.15:
+  version "0.4.18"
+  resolved "http://10.0.41.30:8080/source-map-support/-/source-map-support-0.4.18.tgz#0286a6de8be42641338594e97ccea75f0a2c585f"
+  dependencies:
+    source-map "^0.5.6"
 
 source-map@0.5.6:
   version "0.5.6"
@@ -7877,9 +7877,9 @@ strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "http://10.0.41.30:8080/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
 
-style-loader@0.18.2:
-  version "0.18.2"
-  resolved "http://10.0.41.30:8080/style-loader/-/style-loader-0.18.2.tgz#cc31459afbcd6d80b7220ee54b291a9fd66ff5eb"
+style-loader@0.19.1:
+  version "0.19.1"
+  resolved "http://10.0.41.30:8080/style-loader/-/style-loader-0.19.1.tgz#591ffc80bcefe268b77c5d9ebc0505d772619f85"
   dependencies:
     loader-utils "^1.0.2"
     schema-utils "^0.3.0"
