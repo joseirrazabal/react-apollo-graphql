@@ -1,0 +1,14 @@
+test-logs:
+    container_name: test-logs
+    build: .
+    command: sh -c 'npm install ; npm start'    
+    volumes:
+        - ../../:/code
+    log_driver: syslog   
+#    log_opt: {
+#      'syslog-address':'tcp://localhost:5000',
+#      'syslog-facility':'daemon'
+#    } 
+            
+
+    net: "host"
